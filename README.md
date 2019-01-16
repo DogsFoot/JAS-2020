@@ -1,28 +1,31 @@
 # js-study
 - 매주 수요일 19:00 판교
-목적
+
+## 목적
 여진
+
 웹에 대한 공부
-    : vuejs
-    : canvas
-    : firebase or aws
+- vuejs
+- canvas
+- firebase or aws
 
 경주
-    : 자바스크립트 
+- 자바스크립트 
 
 영광
-    : JS
-    : vue, react
-    : nodejs
+- JS
+- vue, react
+- nodejs
 
-javascript level
-    여진: DOM 할수 있다
-    경주: 초급
-    영광: 초급
+## javascript level
+- 여진: DOM 할수 있다
+- 경주: 초급
+- 영광: 초급
 
-진행
-    : 이론 + 실습
-    : 초반 이론
+## 진행
+- 이론 + 실습
+-- 초반 이론
+
 * 자료형 / 조건문 / 반복문 / 함수 / 객체 / 배열
     : 실습
 * 끝말잇기
