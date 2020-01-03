@@ -13,13 +13,13 @@
 ## 구현2. 닫기 기능
 ### 조건
 - `#exp_wrapper` 외 클릭시
-- ESE키 입력시
+- ESC키 입력시
 - `#exp_button[aria-expanded="true"]` 을 클릭시
 - `#exp_elem_list`에서 엔터시
 - `#exp_elem_list`로 포커스가 다른 곳으로 이동시
 
 ### 필요 작업
-- `#exp_button`에 `aria-expanded="true"` 추가
+- `#exp_button`에 `aria-expanded="true"` 제거
 - `#exp_elem_list`의 `.hidden` 클래스 제거
 - `#exp_button`로 포커스 이동
 
