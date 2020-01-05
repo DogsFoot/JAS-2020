@@ -9,10 +9,7 @@
   ㄴ rodwn
 ```
 
-<<<<<<< HEAD
 * [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/practice/dropdown)
-=======
-* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/dropdown)
 
 ### 프로젝트 관리
 이왕 PR을 통한 코드리뷰를 하는 김에, 깃헙내에 프로젝트랑 마일스톤 기능도 적극 써보려고 해요.  
@@ -40,7 +37,7 @@
 3. 리뷰어의 approve 이후에 MERGE를 해주세요!  
 4. 모든 멤버가 작업이 끝나고, 해당 스터디가 지나면 기준 브랜치를 master로 merge 후 관련 브랜치 삭제
 
-**주의) 1+ approve 일때만 MERGE가 되도록 옵션을 줬는데, 멤버 전원이 admin 권한이라 approve 없이도 MERGE가 됩니다 **
+**주의) 1+ approve 일때만 MERGE가 되도록 옵션을 줬는데, 멤버 전원이 admin 권한이라 approve 없이도 MERGE가 됩니다**
 
 ### 작업 흐름 dropdown 예(1 Sprint 기준)
 1. 과제 준비 단계
@@ -58,4 +55,3 @@
   - MERGE가 되면 개인이 생성한 이슈를 각자 Close
 4. 실제 스터디에서 관련 이슈 정리 및 다음 담당자 지정
 5. 위 Sprint를 반복
->>>>>>> master
