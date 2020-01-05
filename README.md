@@ -3,10 +3,13 @@
 
 ## folder
 ```
-ㄴ dropdown / README.md ( 과제 가이드 )
-  ㄴ c11g
-  ㄴ yeoyeo3
-  ㄴ rodwn
+/ practice
+  ㄴ dropdown / README.md ( 과제 가이드 )
+    ㄴ c11g
+    ㄴ yeoyeo3
+    ㄴ rodwn
+
+/ README.md
 ```
 
 * [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/practice/dropdown)
@@ -17,7 +20,7 @@
 이번에 공부도 해볼 겸 활용해보려고 합니다. 잘 모르는 기능들이라 활용성이 떨어질 수 도 있어요.  
 
 프로젝트는 2개 병행합니다.
-- BOOK: 책 읽고 정리
+- BOOK REVIEW: 책 읽고 정리
 - PRACTICE: 매 주 내는 실습 과제
 
 마일스톤은 실제 스터디가 이루어지는 날을 기준으로 잡았습니다.(보통 1주 단위 예상)
