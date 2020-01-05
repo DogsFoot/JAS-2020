@@ -9,6 +9,9 @@
   ㄴ rodwn
 ```
 
+<<<<<<< HEAD
+* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/practice/dropdown)
+=======
 * [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/dropdown)
 
 ### 프로젝트 관리
@@ -55,3 +58,4 @@
   - MERGE가 되면 개인이 생성한 이슈를 각자 Close
 4. 실제 스터디에서 관련 이슈 정리 및 다음 담당자 지정
 5. 위 Sprint를 반복
+>>>>>>> master
