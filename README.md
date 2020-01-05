@@ -9,4 +9,4 @@
   ㄴ rodwn
 ```
 
-* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/dropdown)
+* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/practice/dropdown)
