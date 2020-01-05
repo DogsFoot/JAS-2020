@@ -4,14 +4,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Document</title>
+	<title>Dropdown 예제!</title>
 </head>
 <style>
 	#exp_wrapper {
 		position: absolute;
-		top: 50%;
+		top: 35%;
 		left: 50%;
-		margin: -16px 0 0 -75px;
+		margin-left: -75px;
 	}
 	.listbox-area {
 		display: grid;
@@ -175,10 +175,26 @@
 			<li id="exp_elem_Cm" role="option">Curium</li>
 			<li id="exp_elem_Bk" role="option">Berkelium</li>
 			<li id="exp_elem_Cf" role="option">Californium</li>
+			<li id="exp_elem_Np" role="option">Neptunium</li>
+			<li id="exp_elem_Pu" role="option">Plutonium</li>
+			<li id="exp_elem_Am" role="option">Americium</li>
+			<li id="exp_elem_Cm" role="option">Curium</li>
+			<li id="exp_elem_Bk" role="option">Berkelium</li>
+			<li id="exp_elem_Cf" role="option">Californium</li>
+			<li id="exp_elem_Np" role="option">Neptunium</li>
+			<li id="exp_elem_Pu" role="option">Plutonium</li>
+			<li id="exp_elem_Am" role="option">Americium</li>
+			<li id="exp_elem_Cm" role="option">Curium</li>
+			<li id="exp_elem_Bk" role="option">Berkelium</li>
+			<li id="exp_elem_Cf" role="option">Californium</li>
+			<li id="exp_elem_Np" role="option">Neptunium</li>
+			<li id="exp_elem_Pu" role="option">Plutonium</li>
+			<li id="exp_elem_Am" role="option">Americium</li>
+			<li id="exp_elem_Cm" role="option">Curium</li>
+			<li id="exp_elem_Bk" role="option">Berkelium</li>
+			<li id="exp_elem_Cf" role="option">Californium</li>
 		</ul>
-		<button type="button">asdf</button>
-		<button type="button" id="test">asdf</button>
-		<button type="button">asdf</button>
+		<button type="button">포커스확인용</button>
 	</div>
 
 	<script>
@@ -187,6 +203,7 @@
 			const trigger = document.getElementById('exp_button');
 			const listBox = document.getElementById('exp_elem_list');
 			const listArray = [...listBox.children];
+			let selectedIndex = 0;
 
 			// 펼치기
 			function expand () {
@@ -201,6 +218,19 @@
 				listBox.classList.add('hidden');
 				trigger.focus();
 			}
+
+			//인덱스찾기
+			function findIndex (array) {
+				array.forEach(function (val, index) {
+					if (val.getAttribute('aria-selected') === 'true') {
+						selectedIndex = index;
+		
+						return false;
+					}
+				});
+
+				return selectedIndex;
+			}
 			
 			//클릭
 			trigger.addEventListener('click', function () {
@@ -208,6 +238,18 @@
 					expand();
 				}
 			});
+
+			//선택된 항목이 최소 스크롤해야 볼 수 있는 항목인지아닌지
+			function isFocusedItemIndexBiggerThanLastItemInVisibleScreenWithoutScroll (dropdownLayer, selectedIndex) {
+				const layerHeight = dropdownLayer.offsetHeight;
+				const itemHeight = listArray[0].offsetHeight;
+				const itemCountOnScreen = Math.round(layerHeight / itemHeight);
+
+				if (selectedIndex> itemCountOnScreen - 2) {
+					return true;
+				}
+				return false;
+			}
 
 			listBox.addEventListener('blur', function () {
 				collapse();
@@ -223,6 +265,7 @@
 					item.classList.add('focused');
 					item.setAttribute('aria-selected', 'true');
 					trigger.textContent = item.textContent;
+					findIndex(listArray);
 				});
 			});
 
@@ -231,61 +274,56 @@
 				const esc = 27;
 				const upArrow = 38;
 				const downArrow = 40;
-				let selectedIndex;
+				let focusedItem = document.querySelector('.focused');
 
 				if (e.keyCode === esc || e.keyCode === enter) {
 					this.blur();
 					e.preventDefault();
-				} else if (e.keyCode === 38) {
+				} else if (e.keyCode === upArrow) {
+					e.preventDefault();
+					
 					if (listArray.every(item => item.getAttribute('aria-selected') === null)) {
 						listArray[0].classList.add('focused');
 						listArray[0].setAttribute('aria-selected', 'true');
 						trigger.textContent = listArray[0].textContent;
-					} else {
-						listArray.forEach(function (val, index) {
-							if (val.getAttribute('aria-selected') === 'true') {
-								selectedIndex = index;
+						selectedIndex = 0;
+					} else if (selectedIndex > 0) {
+						if (listBox.scrollTop > 0){
+							focusedItem.previousElementSibling.scrollIntoViewIfNeeded(false);
+						};
 
-								return false;
-							}
-						});
 						listArray.forEach(function (item) {
 							item.removeAttribute('class');
 							item.removeAttribute('aria-selected');
 						});
 
-						if (selectedIndex === 0) {
-							selectedIndex = listBox.childElementCount;
-							return false;
-						}
 						listArray[selectedIndex - 1].classList.add('focused');
 						listArray[selectedIndex - 1].setAttribute('aria-selected', 'true');
 						trigger.textContent = listArray[selectedIndex - 1].textContent;
+						selectedIndex--;
 					}
-				} else if (e.keyCode === 40) {
+				} else if (e.keyCode === downArrow) {
+					e.preventDefault();
+
 					if (listArray.every(item => item.getAttribute('aria-selected') === null)) {
 						listArray[0].classList.add('focused');
 						listArray[0].setAttribute('aria-selected', 'true');
 						trigger.textContent = listArray[0].textContent;
-					} else {
-						listArray.forEach(function (val, index) {
-							if (val.getAttribute('aria-selected') === 'true') {
-								selectedIndex = index;
+						selectedIndex = 0;
+					} else if (selectedIndex < listArray.length - 1) {
+						if (isFocusedItemIndexBiggerThanLastItemInVisibleScreenWithoutScroll (listBox, selectedIndex)){
+							focusedItem.nextElementSibling.scrollIntoViewIfNeeded(false);
+						};
 
-								return false;
-							}
-						});
 						listArray.forEach(function (item) {
 							item.removeAttribute('class');
 							item.removeAttribute('aria-selected');
 						});
-
-						if (selectedIndex === listBox.childElementCount - 1) {
-							return false;
-						}
+				
 						listArray[selectedIndex + 1].classList.add('focused');
 						listArray[selectedIndex + 1].setAttribute('aria-selected', 'true');
 						trigger.textContent = listArray[selectedIndex + 1].textContent;
+						selectedIndex++;
 					}
 				}
 			});
