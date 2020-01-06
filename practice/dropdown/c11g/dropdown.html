@@ -39,8 +39,9 @@ button { font-size: inherit; }
       <li id="exp_elem_Cf" role="option">Californium</li>
     </ul>
   </div>
-<script src="dropdown.js"></script>
-<script>
+<script src="dropdown.js" type="module"></script>
+<script type="module">
+import Dropdown from './dropdown.js';
 const dropdown = new Dropdown('#exp_wrapper');
 </script>
 </body>
