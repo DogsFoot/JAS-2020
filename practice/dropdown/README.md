@@ -31,7 +31,7 @@
 
 ### 필요 작업
 - 이전 다른 추가되어 있던  `.focused` 제거
-- 선택된 `li`에 `.focused` 클래스 추가
+- 선택된 `li`에 `.focused` 클래스 추가, `[aria-selected="true"]` 추가
 - `#exp_elem_list`의 `aria-activedescendant` 어트리뷰트 값을 선택된 `li`의 `id`값으로 변경
 - `#exp_button`의 text를 선택된 `li`의 텍스트로 변경
 
