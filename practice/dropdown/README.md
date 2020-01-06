@@ -73,7 +73,7 @@
 ```
 
 ### CSS
-```
+```css
 [role="listbox"] { margin: 1em 0 0; padding: 0; min-height: 18em; border: 1px solid #aaa; background: white; }
 [role="option"] { position: relative; display: block; padding: 0 1em 0 1.5em; line-height: 1.8em; }
 [role="option"].focused { background: #bde4ff; }
