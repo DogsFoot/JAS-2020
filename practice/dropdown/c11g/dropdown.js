@@ -6,28 +6,23 @@ class Dropdown {
     this.listbox = this.wrapper.querySelector(`[role='listbox']`);
     this.options = [...this.wrapper.querySelectorAll(`[role='option']`)];
     
-    // 선택된 옵션 index
+    // 선택된 옵션 초기화
     this.selectedIndex = 0;
-    this.keyMap = {
-      up: 38,
-      down: 40,
-      enter: 13,
-      esc: 27,
-    };
+    this.options[this.selectedIndex].classList.add('focused');
+    this.options[this.selectedIndex].setAttribute('aria-selected', true);
 
-    // add events
+    // 이벤트 등록
     this.addEvents();
   }
 
-  toggleExpanded() {
-    if (this.button.getAttribute('aria-expanded')) {
-      this.button.removeAttribute('aria-expanded');
-      this.listbox.classList.add('hidden');
-      this.button.focus();
-    } else {
-      this.button.setAttribute('aria-expanded', true);
-      this.listbox.classList.remove('hidden');
-    }
+  expand() {
+    this.button.setAttribute('aria-expanded', true);
+    this.listbox.classList.remove('hidden');
+  }
+  
+  collapse() {
+    this.button.removeAttribute('aria-expanded');
+    this.listbox.classList.add('hidden');
   }
 
   selectOption() {
@@ -49,43 +44,54 @@ class Dropdown {
     this.listbox.setAttribute('aria-activedescendant', currentOption.id);
   }
 
-  addEvents() {
-    this.button.addEventListener('click', () => {
-      console.log('button click')
-      this.toggleExpanded();
-      this.selectOption();
+  // handler
+  buttonClickHandler() {
+    if (this.button.getAttribute('aria-expanded')) {
+      this.collapse();
+      this.button.focus();
+    } else {
+      this.expand();
       this.listbox.focus();
-    });
+    }
+  }
 
-    this.listbox.addEventListener('click', e => {
-      if (e.target.getAttribute('role') !== 'option' || e.target.getAttribute('aria-selected')) return;
-      
-      this.selectedIndex = this.options.indexOf(e.target);
-      this.selectOption();
-    });
+  optionClickHandler(e) {
+    if (e.target.getAttribute('role') !== 'option' || e.target.getAttribute('aria-selected')) return;
+    this.selectedIndex = this.options.indexOf(e.target);
+    this.selectOption();
+  }
 
-    this.listbox.addEventListener('keydown', e => {
-      switch ( e.keyCode ) {
-        case this.keyMap.up:
-          if (this.selectedIndex <= 0) return;
-          this.selectedIndex--;
-        break;
-        case this.keyMap.down:
-          if (this.selectedIndex >= this.options.length-1) return;
-          this.selectedIndex++;
-        break;
-        case this.keyMap.enter:
-        case this.keyMap.esc:
-          this.listbox.blur();
-          return;
-      }
-      this.selectOption();
-    });
+  optionKeyHandler(e) {
+    switch (e.keyCode) {
+      case 38: // up
+        if (this.selectedIndex <= 0) return;
+        this.selectedIndex--;
+        this.selectOption();
+      break;
+      case 40: // down
+        if (this.selectedIndex >= this.options.length-1) return;
+        this.selectedIndex++;
+        this.selectOption();
+      break;
+      case 13: // enter
+      case 27: // esc
+        e.preventDefault();
+        this.collapse();
+        this.button.focus();
+      break;
+    }
+  }
 
-    this.listbox.addEventListener('blur', () => {
-      console.log('blur')
-      this.toggleExpanded();
-    });
+  blurHander(e) {
+    if (e.relatedTarget === this.button) return;
+    this.collapse();
+  }
+
+  addEvents() {
+    this.button.addEventListener('click', () => this.buttonClickHandler());
+    this.listbox.addEventListener('click', e => this.optionClickHandler(e));
+    this.listbox.addEventListener('keydown', e => this.optionKeyHandler(e));
+    this.listbox.addEventListener('blur', e => this.blurHander(e));
   }
 }
 

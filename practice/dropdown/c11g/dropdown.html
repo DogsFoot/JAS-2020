@@ -13,6 +13,7 @@ button[aria-haspopup="listbox"] { position: relative; padding: 5px 10px; width: 
 button[aria-haspopup="listbox"]::after {position: absolute;right: 5px;top: 10px;width: 0;height: 0;border: 8px solid transparent;border-top-color: currentColor;border-bottom: 0;content: ""; }
 button[aria-haspopup="listbox"][aria-expanded="true"]::after {position: absolute;right: 5px;top: 10px;width: 0;height: 0;border: 8px solid transparent;border-top: 0;border-bottom-color: currentColor;content: ""; }
 button[aria-haspopup="listbox"] + [role="listbox"] { position: absolute; margin: 0; width: 9.5em; max-height: 10em; border-top: 0; overflow-y: auto; }
+button[aria-haspopup="listbox"]:focus { background: rgba(0,0,0,.1); }
 button { font-size: inherit; }
 .hidden { display: none; }
 </style>
