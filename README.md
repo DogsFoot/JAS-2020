@@ -54,7 +54,10 @@
 3. 과제 진행 단계
   - 멤버 개인별로 이슈를 생성("조영광 dropdown 과제") : Todo 단계
   - 개인 브랜치 생성 후 작업 진행 : In progress 단계
-  - 작업 완료 후 dropdown으로 PR -> 리뷰 -> approve -> MERGE
+4. 리뷰 단계
+  - 작업 완료 후 dropdown으로 PR: Review 단계
+  - 다른 멤버들의 PR 리뷰
+  - 리뷰가 종료되면 MERGE(approve -> MERGE)
   - MERGE가 되면 개인이 생성한 이슈를 각자 Close
-4. 실제 스터디에서 관련 이슈 정리 및 다음 담당자 지정
-5. 위 Sprint를 반복
+5. 실제 스터디에서 관련 이슈 정리 및 다음 담당자 지정
+6. 위 Sprint를 반복
