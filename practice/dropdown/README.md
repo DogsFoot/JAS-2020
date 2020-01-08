@@ -20,7 +20,7 @@
 
 ### 필요 작업
 - `#exp_button`에 `aria-expanded="true"` 제거
-- `#exp_elem_list`의 `.hidden` 클래스 제거
+- `#exp_elem_list`의 `.hidden` 클래스 추가
 - `#exp_button`로 포커스 이동
 
 
