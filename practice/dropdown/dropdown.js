@@ -1,9 +1,8 @@
 (function () {
-	const wrapper = document.getElementById('exp_wrapper');
 	const trigger = document.getElementById('exp_button');
 	const listBox = document.getElementById('exp_elem_list');
 	const listArray = Array.prototype.slice.call(listBox.children);
-	let selectedIndex = 0;
+	let selectedIndex;
 
 	// 펼치기
 	function expand () {
@@ -19,17 +18,17 @@
 		trigger.focus();
 	}
 
-	//인덱스찾기
+	//선택된 인덱스 반환
 	function findIndex (array) {
-		array.forEach(function (val, index) {
+		let findedIndex;
+		array.some(function (val, index) {
 			if (val.getAttribute('aria-selected') === 'true') {
-				selectedIndex = index;
-
-				return false;
+				findedIndex = index;
+				return true;
 			}
 		});
 
-		return selectedIndex;
+		return findedIndex;
 	}
 	
 	//클릭
@@ -39,34 +38,26 @@
 		}
 	});
 
-	//선택된 항목이 최소 스크롤해야 볼 수 있는 항목인지아닌지
-	function isFocusedItemIndexBiggerThanLastItemInVisibleScreenWithoutScroll (dropdownLayer, selectedIndex) {
-		const layerHeight = dropdownLayer.offsetHeight;
-		const itemHeight = listArray[0].offsetHeight;
-		const itemCountOnScreen = Math.round(layerHeight / itemHeight);
-
-		if (selectedIndex> itemCountOnScreen - 2) {
-			return true;
-		}
-		return false;
-	}
-
 	listBox.addEventListener('blur', function () {
 		collapse();
 	});
 
-	listArray.forEach(function (item) {
-		item.addEventListener('click', function () {
-			listArray.forEach(function (val) {
-				val.removeAttribute('class');
-				val.removeAttribute('aria-selected');
-			});
-			listBox.setAttribute('aria-activedescendant', item['id']);
-			item.classList.add('focused');
-			item.setAttribute('aria-selected', 'true');
-			trigger.textContent = item.textContent;
-			findIndex(listArray);
+	listBox.addEventListener('click', function (e) {
+		let target;
+
+		if (!(e.target === this ? false : target = e.target)) {
+			return false;
+		}
+
+		listArray.forEach(function (val) {
+			val.removeAttribute('class');
+			val.removeAttribute('aria-selected');
 		});
+		listBox.setAttribute('aria-activedescendant', target['id']);
+		target.classList.add('focused');
+		target.setAttribute('aria-selected', 'true');
+		trigger.textContent = target.textContent;
+		selectedIndex = findIndex(listArray);
 	});
 
 	listBox.addEventListener('keydown', function (e) {
@@ -74,7 +65,8 @@
 		const esc = 27;
 		const upArrow = 38;
 		const downArrow = 40;
-		let focusedItem = document.querySelector('.focused');
+		const focusedItem = document.querySelector('.focused');
+		const isAnySelected = listArray.every(item => item.getAttribute('aria-selected') === null);
 
 		if (e.keyCode === esc || e.keyCode === enter) {
 			this.blur();
@@ -82,14 +74,13 @@
 		} else if (e.keyCode === upArrow) {
 			e.preventDefault();
 			
-			if (listArray.every(function(item) {
-					return item.getAttribute('aria-selected') === null;
-				})) {
+			if (isAnySelected) {
 				listArray[0].classList.add('focused');
 				listArray[0].setAttribute('aria-selected', 'true');
+				listBox.setAttribute('aria-activedescendant', listArray[0]['id']);
 				trigger.textContent = listArray[0].textContent;
 				selectedIndex = 0;
-			} else if (selectedIndex > 0) {
+			} else if (selectedIndex !== 0) {
 				focusedItem.previousElementSibling.scrollIntoViewIfNeeded(false);
 
 				listArray.forEach(function (item) {
@@ -99,23 +90,21 @@
 
 				listArray[selectedIndex - 1].classList.add('focused');
 				listArray[selectedIndex - 1].setAttribute('aria-selected', 'true');
+				listBox.setAttribute('aria-activedescendant', listArray[selectedIndex - 1]['id']);
 				trigger.textContent = listArray[selectedIndex - 1].textContent;
 				selectedIndex--;
 			}
 		} else if (e.keyCode === downArrow) {
 			e.preventDefault();
 
-			if (listArray.every(function(item) {
-					return item.getAttribute('aria-selected') === null;
-				})) {
+			if (isAnySelected) {
 				listArray[0].classList.add('focused');
 				listArray[0].setAttribute('aria-selected', 'true');
+				listBox.setAttribute('aria-activedescendant', listArray[0]['id']);
 				trigger.textContent = listArray[0].textContent;
 				selectedIndex = 0;
 			} else if (selectedIndex < listArray.length - 1) {
-				if (isFocusedItemIndexBiggerThanLastItemInVisibleScreenWithoutScroll (listBox, selectedIndex)){
-					focusedItem.nextElementSibling.scrollIntoViewIfNeeded(false);
-				};
+				focusedItem.nextElementSibling.scrollIntoViewIfNeeded(false);
 
 				listArray.forEach(function (item) {
 					item.removeAttribute('class');
@@ -124,6 +113,7 @@
 		
 				listArray[selectedIndex + 1].classList.add('focused');
 				listArray[selectedIndex + 1].setAttribute('aria-selected', 'true');
+				listBox.setAttribute('aria-activedescendant', listArray[selectedIndex + 1]['id']);
 				trigger.textContent = listArray[selectedIndex + 1].textContent;
 				selectedIndex++;
 			}
