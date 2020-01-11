@@ -8,6 +8,7 @@
     ㄴ c11g
     ㄴ yeoyeo3
     ㄴ rodwn
+    ㄴ renee
 
 / README.md
 ```
@@ -51,8 +52,8 @@
   - 기준 브랜치 dropdown 생성 후 원격에 푸쉬
   - 과제 스펙을 정리, 스펙 정리는 dropdown 브랜치에서 진행하며, /dropdown/readme.md 파일에 작성
   - 정리가 완료되면 PR -> MERGE
-3. 과제 진행 단계
   - 멤버 개인별로 이슈를 생성("조영광 dropdown 과제") : Todo 단계
+3. 과제 진행 단계
   - 개인 브랜치 생성 후 작업 진행 : In progress 단계
 4. 리뷰 단계
   - 작업 완료 후 dropdown으로 PR: Review 단계
