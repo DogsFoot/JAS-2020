@@ -14,6 +14,7 @@
 ```
 
 * [dropdown](https://github.com/DogsFoot/JAS-2020/tree/dropdown/practice/dropdown)
+* [modifyDOM](https://github.com/DogsFoot/JAS-2020/tree/modifyDOM/practice/modifyDOM)
 
 ### 프로젝트 관리
 이왕 PR을 통한 코드리뷰를 하는 김에, 깃헙내에 프로젝트랑 마일스톤 기능도 적극 써보려고 해요.  
