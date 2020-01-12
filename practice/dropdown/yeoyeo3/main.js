@@ -8,6 +8,7 @@ const closeList = function(button){
 }
 
 const selectOption = {
+	selectedIndex : 'null',
 	select : function(selectedOption){
 		let optionList = selectedOption.parentElement;
 		let beforeSelected = optionList.querySelector('.focused');
@@ -23,41 +24,36 @@ const selectOption = {
 		optionList.setAttribute('aria-activedescendant', selectedOptionID);
 		button.textContent = selectedOption.textContent;
 	},
-	up : function(optionListItems, selectedOptionIndex){
-		if( selectedOptionIndex === 'null') {
-			this.select(optionListItems[optionListItems.length - 1]);
-			return optionListItems.length - 1;
-		} else if (selectedOptionIndex === 0) {
-			return selectedOptionIndex;
+	up : function(optionListItems){
+		if( this.selectedIndex === 'null') {
+			this.selectedIndex = optionListItems.length - 1;
+		} else if (this.selectedIndex === 0) {
 		} else {
-			this.select(optionListItems[selectedOptionIndex - 1]);
-			return selectedOptionIndex - 1;
+			this.selectedIndex = this.selectedIndex - 1;
 		}
+		this.select(optionListItems[this.selectedIndex]);
 	},
-	down : function(optionListItems, selectedOptionIndex){
-		if( selectedOptionIndex === 'null') {
-			this.select(optionListItems[0]);
-			return 0;
-		} else if (selectedOptionIndex === (optionListItems.length - 1)){
-			return selectedOptionIndex;
+	down : function(optionListItems){
+		if( this.selectedIndex === 'null') {
+			this.selectedIndex = 0;
+		} else if (this.selectedIndex === (optionListItems.length - 1)){
 		} else {
-			this.select(optionListItems[selectedOptionIndex + 1]);
-			return selectedOptionIndex + 1;
+			this.selectedIndex = this.selectedIndex + 1;
 		}
+		this.select(optionListItems[this.selectedIndex]);
 	},
 	click : function(optionListItems, index){
-		this.select(optionListItems[index]);
-		return index;
+		this.selectedIndex = index;
+		this.select(optionListItems[this.selectedIndex]);
 	}
 }
 
 const openList = function(button){
 	let optionList = button.nextElementSibling;
 	let optionListItems = optionList.querySelectorAll('[role=option]');
-	let selectedOptionIndex = 'null';
 	optionListItems.forEach(function(item, index){
 		if(item.getAttribute('class') === 'focused') {
-			selectedOptionIndex = index;
+			selectOption.selectedIndex = index;
 		}
 	});
 	button.setAttribute('aria-expanded', 'true');
@@ -68,17 +64,17 @@ const openList = function(button){
 	optionList.addEventListener('keyup', function (e){
 		const keyCode = e.keyCode;
 		if(keyCode == '38') {
-			selectedOptionIndex = selectOption.up(optionListItems, selectedOptionIndex);
+			selectOption.up(optionListItems);
 		}
 		if(keyCode == '40') {
-			selectedOptionIndex = selectOption.down(optionListItems, selectedOptionIndex);
+			selectOption.down(optionListItems);
 		}      
 	});
 
 	// Open Or Close List by Click Button
 	optionListItems.forEach(function(option, index){
 		option.addEventListener('click', function(){
-			selectedOptionIndex = selectOption.click(optionListItems, index);
+			selectOption.click(optionListItems, index);
 		});
 	});
 
