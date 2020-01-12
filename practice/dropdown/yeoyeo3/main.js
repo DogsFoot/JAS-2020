@@ -27,6 +27,8 @@ const selectOption = {
 		if( selectedOptionIndex === 'null') {
 			this.select(optionListItems[optionListItems.length - 1]);
 			return optionListItems.length - 1;
+		} else if (selectedOptionIndex === 0) {
+			return selectedOptionIndex;
 		} else {
 			this.select(optionListItems[selectedOptionIndex - 1]);
 			return selectedOptionIndex - 1;
@@ -36,6 +38,8 @@ const selectOption = {
 		if( selectedOptionIndex === 'null') {
 			this.select(optionListItems[0]);
 			return 0;
+		} else if (selectedOptionIndex === (optionListItems.length - 1)){
+			return selectedOptionIndex;
 		} else {
 			this.select(optionListItems[selectedOptionIndex + 1]);
 			return selectedOptionIndex + 1;
