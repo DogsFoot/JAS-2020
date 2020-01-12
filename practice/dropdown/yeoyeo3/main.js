@@ -61,7 +61,7 @@ const openList = function(button){
 	optionList.focus();
 
 	// Select Option by Key
-	optionList.addEventListener('keydwon', function (e){
+	optionList.addEventListener('keyup', function (e){
 		const keyCode = e.keyCode;
 		if(keyCode == '38') {
 			selectedOptionIndex = selectOption.up(optionListItems, selectedOptionIndex);
@@ -79,7 +79,7 @@ const openList = function(button){
 	});
 
 	// Close List by ESC or Enter
-	optionList.addEventListener('keydwon', function (e){
+	optionList.addEventListener('keyup', function (e){
 		const keyCode = e.keyCode;
 		if(keyCode == '27' || keyCode == '13') {
 			closeList(button);
