@@ -1,3 +1,4 @@
+(function(){
 const buttons = document.querySelectorAll('[aria-haspopup=listbox]');
 
 const closeList = function(button){
@@ -103,3 +104,4 @@ buttons.forEach(function(button, index){
 		}
 	});
 });
+})();
