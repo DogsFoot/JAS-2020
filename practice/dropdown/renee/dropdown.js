@@ -1,7 +1,7 @@
 import handleButton from "./js/ButtonEvent.js";
 import { handleSelectKey, handleListBlur, handleOptionClick } from "./js/SelectEvent.js";
 
-const init = () => {
+const dropdown = () => {
   handleButton();
 
   handleSelectKey();
@@ -9,6 +9,4 @@ const init = () => {
   handleOptionClick();
 }
 
-(function() {
-  init();
-})();
+dropdown();
