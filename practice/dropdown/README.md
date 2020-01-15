@@ -20,7 +20,7 @@
 
 ### 필요 작업
 - `#exp_button`에 `aria-expanded="true"` 제거
-- `#exp_elem_list`의 `.hidden` 클래스 제거
+- `#exp_elem_list`의 `.hidden` 클래스 추가
 - `#exp_button`로 포커스 이동
 
 
@@ -31,7 +31,7 @@
 
 ### 필요 작업
 - 이전 다른 추가되어 있던  `.focused` 제거
-- 선택된 `li`에 `.focused` 클래스 추가
+- 선택된 `li`에 `.focused` 클래스 추가, `[aria-selected="true"]` 추가
 - `#exp_elem_list`의 `aria-activedescendant` 어트리뷰트 값을 선택된 `li`의 `id`값으로 변경
 - `#exp_button`의 text를 선택된 `li`의 텍스트로 변경
 
@@ -73,154 +73,15 @@
 ```
 
 ### CSS
-```
-.listbox-area {
-  display: grid;
-  grid-gap: 2em;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 20px;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  background: #eee;
-}
-
-[role="listbox"] {
-  margin: 1em 0 0;
-  padding: 0;
-  min-height: 18em;
-  border: 1px solid #aaa;
-  background: white;
-}
-
-[role="listbox"]#ss_elem_list {
-  position: relative;
-  max-height: 18em;
-  overflow-y: auto;
-}
-
-[role="listbox"] + *,
-.listbox-label + * {
-  margin-top: 1em;
-}
-
-[role="group"] {
-  margin: 0;
-  padding: 0;
-}
-
-[role="group"] > [role="presentation"] {
-  display: block;
-  margin: 0;
-  padding: 0 0.5em;
-  font-weight: bold;
-  line-height: 2;
-  background-color: #ccc;
-}
-
-[role="option"] {
-  position: relative;
-  display: block;
-  padding: 0 1em 0 1.5em;
-  line-height: 1.8em;
-}
-
-[role="option"].focused {
-  background: #bde4ff;
-}
-
-[role="option"][aria-selected="true"]::before {
-  position: absolute;
-  left: 0.5em;
-  content: "✓";
-}
-
-button[aria-haspopup="listbox"] {
-  position: relative;
-  padding: 5px 10px;
-  width: 150px;
-  border-radius: 0;
-  text-align: left;
-}
-
-button[aria-haspopup="listbox"]::after {
-  position: absolute;
-  right: 5px;
-  top: 10px;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
-  border-top-color: currentColor;
-  border-bottom: 0;
-  content: "";
-}
-
-button[aria-haspopup="listbox"][aria-expanded="true"]::after {
-  position: absolute;
-  right: 5px;
-  top: 10px;
-  width: 0;
-  height: 0;
-  border: 8px solid transparent;
-  border-top: 0;
-  border-bottom-color: currentColor;
-  content: "";
-}
-
-button[aria-haspopup="listbox"] + [role="listbox"] {
-  position: absolute;
-  margin: 0;
-  width: 9.5em;
-  max-height: 10em;
-  border-top: 0;
-  overflow-y: auto;
-}
-
-[role="toolbar"] {
-  display: flex;
-}
-
-[role="toolbar"] > * {
-  border: 1px solid #aaa;
-  background: #ccc;
-}
-
-[role="toolbar"] > [aria-disabled="false"]:focus {
-  background-color: #eee;
-}
-
-button {
-  font-size: inherit;
-}
-
-button[aria-disabled="true"] {
-  opacity: 0.5;
-}
-
-.move-right-btn::after {
-  content: " →";
-}
-
-.move-left-btn::before {
-  content: "← ";
-}
-
-.annotate {
-  color: #366ed4;
-  font-style: italic;
-}
-
-.hidden {
-  display: none;
-}
-
-.offscreen {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  font-size: 14px;
-  white-space: nowrap;
-}
+```css
+[role="listbox"] { margin: 1em 0 0; padding: 0; min-height: 18em; border: 1px solid #aaa; background: white; }
+[role="option"] { position: relative; display: block; padding: 0 1em 0 1.5em; line-height: 1.8em; }
+[role="option"].focused { background: #bde4ff; }
+[role="option"][aria-selected="true"]::before { position: absolute; left: 0.5em; content: "✓"; }
+button[aria-haspopup="listbox"] { position: relative; padding: 5px 10px; width: 150px; border-radius: 0; text-align: left; }
+button[aria-haspopup="listbox"]::after {position: absolute;right: 5px;top: 10px;width: 0;height: 0;border: 8px solid transparent;border-top-color: currentColor;border-bottom: 0;content: ""; }
+button[aria-haspopup="listbox"][aria-expanded="true"]::after {position: absolute;right: 5px;top: 10px;width: 0;height: 0;border: 8px solid transparent;border-top: 0;border-bottom-color: currentColor;content: ""; }
+button[aria-haspopup="listbox"] + [role="listbox"] { position: absolute; margin: 0; width: 9.5em; max-height: 10em; border-top: 0; overflow-y: auto; }
+button { font-size: inherit; }
+.hidden { display: none; }
 ```

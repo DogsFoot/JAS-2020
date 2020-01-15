@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="dropdown.css">
+</head>
+<body>
+	<div id="exp_wrapper">
+		<button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button">Neptunium</button>
+		<ul id="exp_elem_list" tabindex="-1" role="listbox" aria-labelledby="exp_elem" class="hidden" aria-activedescendant="Neptunium">
+			<li id="exp_elem_Np" role="option" class="focused" aria-selected="true">Neptunium</li>
+			<li id="exp_elem_Pu" role="option">Plutonium</li>
+			<li id="exp_elem_Am" role="option">Americium</li>
+			<li id="exp_elem_Cm" role="option">Curium</li>
+			<li id="exp_elem_Bk" role="option">Berkelium</li>
+			<li id="exp_elem_Cf" role="option">Californium</li>
+		</ul>
+	</div>
+</body>
+<script type="module" src="dropdown.js"></script>
+</html>
+
