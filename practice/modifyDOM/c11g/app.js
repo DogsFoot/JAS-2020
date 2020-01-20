@@ -14,7 +14,7 @@ const App = class {
 		this.addHandler();
 	}
 
-	getRandomHexColor() {
+	getRandomRGB() {
 		return `rgb(${Math.ceil(Math.random() * 255)},${Math.ceil(Math.random() * 255)},${Math.ceil(
 			Math.random() * 255
 		)})`;
@@ -25,7 +25,7 @@ const App = class {
 		const card = document.createElement('a');
 		card.setAttribute('role', 'button');
 		card.classList.add('card');
-		card.style.background = this.getRandomHexColor();
+		card.style.background = this.getRandomRGB();
 		card.textContent = wrap.childElementCount + 1;
 		return card;
 	}
@@ -44,7 +44,7 @@ const App = class {
 	cardClickHandler(e) {
 		const target = e.target;
 		if (!target.classList.contains('card')) return;
-		target.style.background = this.getRandomHexColor();
+		target.style.background = this.getRandomRGB();
 	}
 
 	addEvents() {
