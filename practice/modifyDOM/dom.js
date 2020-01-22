@@ -20,11 +20,6 @@
 		}
 	
 		return rgb.reduce((acc, curr) => {
-			if (acc < 16 && typeof acc === 'number') {
-				acc = `0${acc.toString(16)}`;
-			} else {
-				acc = acc.toString(16);
-			}
 			if (curr < 16) {
 				curr = `0${curr.toString(16)}`;
 			} else {
@@ -32,7 +27,7 @@
 			}
 
 			return acc + curr;
-		});
+		}, '');
 	}
 
 	const bindAdd = cardModify.add.bind(cardModify);
