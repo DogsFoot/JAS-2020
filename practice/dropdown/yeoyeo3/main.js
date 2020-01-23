@@ -1,111 +1,124 @@
 (function(){
 const buttons = document.querySelectorAll('[aria-haspopup=listbox]');
 
-const closeList = function(button){
-	let optionList = button.nextElementSibling;
-	button.removeAttribute('aria-expanded');
-	optionList.classList.add('hidden');
-	button.focus();
-}
-
-const selectOption = {
-	select : function(selectedOption){
-		let optionList = selectedOption.parentElement;
-		let beforeSelected = optionList.querySelector('.focused');
-		let selectedOptionID = selectedOption.getAttribute('id');
-		let button = optionList.previousElementSibling;
-		
-		beforeSelected === null ? '' : (
-			beforeSelected.removeAttribute('aria-selected'),
-			beforeSelected.classList.remove('focused')
-		)
-		selectedOption.classList.add('focused');
-		selectedOption.setAttribute('aria-selected', 'true');
-		optionList.setAttribute('aria-activedescendant', selectedOptionID);
-		button.textContent = selectedOption.textContent;
-	},
-	up : function(optionListItems, selectedOptionIndex){
-		if( selectedOptionIndex === 'null') {
-			this.select(optionListItems[optionListItems.length - 1]);
-			return optionListItems.length - 1;
-		} else if (selectedOptionIndex === 0) {
-			return selectedOptionIndex;
-		} else {
-			this.select(optionListItems[selectedOptionIndex - 1]);
-			return selectedOptionIndex - 1;
-		}
-	},
-	down : function(optionListItems, selectedOptionIndex){
-		if( selectedOptionIndex === 'null') {
-			this.select(optionListItems[0]);
-			return 0;
-		} else if (selectedOptionIndex === (optionListItems.length - 1)){
-			return selectedOptionIndex;
-		} else {
-			this.select(optionListItems[selectedOptionIndex + 1]);
-			return selectedOptionIndex + 1;
-		}
-	},
-	click : function(optionListItems, index){
-		this.select(optionListItems[index]);
-		return index;
-	}
-}
-
-const openList = function(button){
-	let optionList = button.nextElementSibling;
-	let optionListItems = optionList.querySelectorAll('[role=option]');
-	let selectedOptionIndex = 'null';
-	optionListItems.forEach(function(item, index){
-		if(item.getAttribute('class') === 'focused') {
-			selectedOptionIndex = index;
-		}
-	});
-	button.setAttribute('aria-expanded', 'true');
-	optionList.classList.remove('hidden');
-	optionList.focus();
-
-	// Select Option by Key
-	optionList.addEventListener('keyup', function (e){
-		const keyCode = e.keyCode;
-		if(keyCode == '38') {
-			selectedOptionIndex = selectOption.up(optionListItems, selectedOptionIndex);
-		}
-		if(keyCode == '40') {
-			selectedOptionIndex = selectOption.down(optionListItems, selectedOptionIndex);
-		}      
-	});
-
-	// Open Or Close List by Click Button
-	optionListItems.forEach(function(option, index){
-		option.addEventListener('click', function(){
-			selectedOptionIndex = selectOption.click(optionListItems, index);
+const data = {
+	btn : '',
+	optionList : '',
+	options : '',
+	selected : null,
+	beforeSelected : '',
+	init : function(button, index){
+		this.btn = button;
+		this.optionList = button.nextElementSibling;
+		this.options = this.optionList.querySelectorAll('[role=option]');
+		this.selected = null;
+		this.options.forEach(function(item, index){
+			if(item.getAttribute('class') === 'focused') {
+				this.selected =  index;
+			}
 		});
-	});
+	},
+}
 
-	// Close List by ESC or Enter
-	optionList.addEventListener('keyup', function (e){
-		const keyCode = e.keyCode;
-		if(keyCode == '27' || keyCode == '13') {
-			closeList(button);
-		}
-	});
+const dropdown = {
+	btn : '',
+	optionList : '',
+	options : '',
+	init : function(btn){
+		this.btn = btn;
+		this.optionList = btn.nextElementSibling;
+		this.options = this.optionList.querySelectorAll('[role=option]');
+		this.expandEvent();
+		this.collapseEvent();
+		this.selectOptionEvent();
+	},
+	expandEvent : function(){
+		this.btn.addEventListener('click', function(){
+			if(data.btn.getAttribute('aria-expanded') === 'true') {
+			} else {
+				data.btn.setAttribute('aria-expanded', 'true');
+				data.optionList.classList.remove('hidden');
+				data.optionList.focus();
+			}
+		});
+	},
+	collapseEvent: function(){
+		// Close List by Loosing focus
+		this.optionList.addEventListener('blur', function (){
+			dropdown.collapse();
+		});
+		// Close List by ESC or Enter
+		this.optionList.addEventListener('keyup', function(e){
+			const escKey = '27';
+			const enterKey = '13';
 
-	// Close List by Loosing focus
-	optionList.addEventListener('blur', function (e){
-		closeList(button);
-	});
+			let keyCode = e.keyCode;
+			if(keyCode === escKey || keyCode === enterKey) {
+				dropdown.collapse(data.btn);
+			}
+		});
+	},
+	selectOptionEvent : function(){
+		const upKey = 38;
+		const downKey = 40;
+
+		this.optionList.addEventListener('keyup', function(e){
+			let keyCode = e.keyCode;
+
+			//up
+			if(keyCode === upKey) {
+				if( data.selected === null) {
+					data.selected = data.options.length - 1;
+				} else if (data.selected === 0) {
+				} else {
+					data.selected = data.selected - 1;
+				}
+				dropdown.select();
+			}
+
+			//down
+			if(keyCode === downKey) {
+				if( data.selected === null) {
+					data.selected = 0;
+				} else if (data.selected === (data.options.length - 1)){
+				} else {
+					data.selected = data.selected + 1;
+				}
+				dropdown.select();
+			}
+		});
+
+		// select by Click btn
+		this.options.forEach(function(option, index){
+			option.addEventListener('click', function(){
+				data.selected = index;
+				dropdown.select();
+			});
+		});
+	},
+	select : function(){
+		data.beforeSelected = data.optionList.querySelector('.focused')
+		data.beforeSelected === null || (
+			data.beforeSelected.removeAttribute('aria-selected'),
+			data.beforeSelected.classList.remove('focused')
+		)
+		data.options[data.selected].classList.add('focused');
+		data.options[data.selected].setAttribute('aria-selected', 'true');
+		data.optionList.setAttribute('aria-activedescendant', data.options[data.selected].getAttribute('id'));
+		data.btn.textContent = data.options[data.selected].textContent;
+	},
+	collapse : function(){
+		data.btn.removeAttribute('aria-expanded');
+		data.optionList.classList.add('hidden');
+		data.btn.focus();
+	},
 }
 
 // Open Or Close List by Click Button
 buttons.forEach(function(button, index){
 	button.addEventListener('click', function(){
-		if(button.getAttribute('aria-expanded') === 'true') {
-			closeList(button);
-		} else {
-			openList(button);
-			// 다른 열린 것 닫고 싶음
-		}
+		data.init(button, index);
 	});
+	dropdown.init(button);
 });
 })();
