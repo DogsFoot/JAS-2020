@@ -1,9 +1,9 @@
 import modifyDOM from "./js/modifyDOM.js";
 
 const modify = {
-    addButton: document.querySelector('#add'),
-    deleteButton: document.querySelector('#delete'),
-    cardWrapper: document.querySelector('#card-wrap')
+  addButton: document.querySelector('#add'),
+  deleteButton: document.querySelector('#delete'),
+  cardWrapper: document.querySelector('#card-wrap')
 };
 
 const elemAddButton = modify.addButton;
