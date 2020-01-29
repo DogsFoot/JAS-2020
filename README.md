@@ -13,9 +13,9 @@
 / README.md
 ```
 
-* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/practice/dropdown)
-* [modifyDOM](https://github.com/DogsFoot/JAS-2020/tree/practice/modifyDOM)
-* [todolist](https://github.com/DogsFoot/JAS-2020/tree/practice/todolist)
+* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/master/practice/dropdown)
+* [modifyDOM](https://github.com/DogsFoot/JAS-2020/tree/master/practice/modifyDOM)
+* [todolist](./practice/todolist)
 
 ### 프로젝트 관리
 이왕 PR을 통한 코드리뷰를 하는 김에, 깃헙내에 프로젝트랑 마일스톤 기능도 적극 써보려고 해요.  
