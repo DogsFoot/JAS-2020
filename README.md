@@ -13,7 +13,7 @@
 / README.md
 ```
 
-* [dropdown](https://github.com/DogsFoot/JAS-2020/tree/master/practice/dropdown)
+* [dropdown](./practice/dropdown)
 * [modifyDOM](./practice/modifyDOM)
 * [todolist](./practice/todolist)
 
