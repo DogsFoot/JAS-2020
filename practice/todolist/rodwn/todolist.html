@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
 		<title>ToDoList</title>
 		<style>
 		input{margin:0;padding:0}
@@ -18,8 +18,26 @@
 		.todo-list li{position:relative;margin-top:10px;padding-right:50px;height:25px;line-height:25px}
 		.todo-list .todo-delete{position:absolute;right:0;top:0;bottom:0;width:50px;background-color:#888;color:#fff;border:0;border-radius:3px;font-size:12px;line-height:25px}
 		</style>
-  </head>
-  <body>
+	</head>
+	<body>
+		<div class="todo-wrap">
+			<div class="todo-prompt">
+				<input type="text" placeholder="Write a to do" class="todo-input">
+				<button type="button" class="todo-add">추가</button>
+			</div>
+			
+			<ul class="todo-list">
+			</ul>
+		</div>
+		<div class="todo-wrap">
+			<div class="todo-prompt">
+				<input type="text" placeholder="Write a to do" class="todo-input">
+				<button type="button" class="todo-add">추가</button>
+			</div>
+			
+			<ul class="todo-list">
+			</ul>
+		</div>
 		<div class="todo-wrap">
 			<div class="todo-prompt">
 				<input type="text" placeholder="Write a to do" class="todo-input">
@@ -55,5 +73,6 @@
 				</li>
 			</ul>
 		</div> -->
-  </body>
+		<script src="./todo.js"></script>
+	</body>
 </html>
