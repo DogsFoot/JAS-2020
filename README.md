@@ -14,7 +14,7 @@
 ```
 
 * [dropdown](https://github.com/DogsFoot/JAS-2020/tree/master/practice/dropdown)
-* [modifyDOM](https://github.com/DogsFoot/JAS-2020/tree/master/practice/modifyDOM)
+* [modifyDOM](./practice/modifyDOM)
 * [todolist](./practice/todolist)
 
 ### 프로젝트 관리
