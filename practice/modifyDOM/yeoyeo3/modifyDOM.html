@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style>
+    .card-wrap { display: flex; flex-wrap: wrap; }
+    .card { position: relative; display: inline-flex; justify-content: center; align-items: center; margin: 5px; width: 100px; height: 100px; font-size: 3em; font-weight: 900; cursor: pointer; user-select: none;}
+    .card::after { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 2px solid rgba(0,0,0,.1); content: ''; }
+  </style>
+  <title>Modify DOM</title>
+</head>
+<body>
+  <button type="button" id="add">추가</button>
+  <button type="button" id="delete">삭제</button>
+  <hr>
+  <div class="card-wrap" id="card-wrap">
+    <a class="card" role="button" style="background:#2e8b57">1</a>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
