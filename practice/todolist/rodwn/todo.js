@@ -2,7 +2,6 @@ const ToDo = {
 	toDoRapper: document.querySelectorAll('.todo-wrap'),
 
 	init () {
-		console.log(this.toDoRapper);
 		this.toDoRapper.forEach(eachToDo => this.addToDoEvent(eachToDo));
 	},
 
@@ -18,11 +17,30 @@ const ToDo = {
 				elementLI = document.createElement('li');
 
 			if (input.value.trim().length <= 0) {
-				return alert('최소 1글자 입력바랍니다.');
+				return alert('입력해주세요.');
 			}
-			elementLI.textContent = input.value;
 			elementLI.setAttribute('id', list.childElementCount+=1);
-			console.log(list);
+			elementLI.innerHTML = `<input type="checkbox" class="todo-checkbox"> <span>${input.value}</span> <button type="button" class="todo-delete">삭제</button>`;
+			elementLI.addEventListener('click', function (e) {
+				const target = e.target;
+
+				if (target.getAttribute('type') === 'checkbox') {
+					if (target.classList.contains('done')) {
+						target.classList.remove('done');
+						target.removeAttribute('checked');
+					} else {
+						target.classList.add('done');
+						target.setAttribute('checked','');
+					}
+				}
+
+				if (target.getAttribute('class') === 'todo-delete') {
+					list.removeChild(this);
+				}
+			});
+
+			input.value = '';
+			input.focus();
 			list.appendChild(elementLI);
 		}
 	}
