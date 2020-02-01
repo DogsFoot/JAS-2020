@@ -108,43 +108,18 @@
 
 		<ul class="todo-list">
 		</ul>
+		<template id="taskTemplate">
+			<li>
+				<input type="checkbox" class="todo-checkbox">
+				<span></span>
+				<button type="button" class="todo-delete">삭제</button>
+			</li>
+		</template>
 	</div>
-
-	<!-- <div class="todo-wrap">
-		<div class="todo-prompt">
-			<input type="text" placeholder="Write a to do" class="todo-input">
-			<button type="button" class="todo-add">추가</button>
-		</div>
-
-		<ul class="todo-list">
-			<li id="1">
-				<input type="checkbox" class="todo-checkbox">
-				<span>입력 받은 텍스트가 들어갑니다.</span>
-				<button type="button" class="todo-delete">삭제</button>
-			</li>
-			<li id="2">
-				<input type="checkbox" class="todo-checkbox">
-				<span>입력 받은 텍스트가 들어갑니다.</span>
-				<button type="button" class="todo-delete">삭제</button>
-			</li>
-			<li id="3">
-				// 체크박스에 체크 시 클래스(.done), checked 노출
-				<input type="checkbox" class="todo-checkbox done" checked>
-				<span>입력 받은 텍스트가 들어갑니다.</span>
-				<button type="button" class="todo-delete">삭제</button>
-			</li>
-		</ul>
-	</div> -->
-	<template id="taskTemplate">
-		<li>
-			<input type="checkbox" class="todo-checkbox">
-			<span></span>
-			<button type="button" class="todo-delete">삭제</button>
-		</li>
-	</template>
 	<script type="module">
-		import App from './app.js';
-		const app = new App();
+		import Todo from './Todo.js';
+		import Renderer from './js/Renderer.js';
+		new Renderer(document.querySelector('.todo-wrap'), new Todo());
 	</script>
 </body>
 
