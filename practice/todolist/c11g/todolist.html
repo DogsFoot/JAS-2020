@@ -117,9 +117,10 @@
 		</template>
 	</div>
 	<script type="module">
-		import Todo from './Todo.js';
+		import Todo from './js/Todo.js';
 		import Renderer from './js/Renderer.js';
-		new Renderer(document.querySelector('.todo-wrap'), new Todo());
+		const todo = new Todo();
+		new Renderer(document.querySelector('.todo-wrap'), todo);
 	</script>
 </body>
 
