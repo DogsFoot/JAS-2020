@@ -1,4 +1,4 @@
-const ToDo = {
+const toDo = {
 	toDoWrapper: document.querySelector('.todo-wrap'),
 	resetButton: document.querySelector('.btn-reset'),
 	addButton: document.querySelector('.todo-wrap .todo-add'),
@@ -6,8 +6,8 @@ const ToDo = {
 	list: document.querySelector('.todo-wrap .todo-list'),
 
 	init () {
-		const bindAddListItem = this.addListItem.bind(ToDo),
-			bindResetList = this.resetList.bind(ToDo);
+		const bindAddListItem = this.addListItem.bind(toDo),
+			bindResetList = this.resetList.bind(toDo);
 
 		this.resetButton.addEventListener('click', bindResetList);
 		this.addButton.addEventListener('click', bindAddListItem);
@@ -49,7 +49,7 @@ const ToDo = {
 		const target = e.target; 
 
 		if (target.classList.contains('todo-delete')) {
-			ToDo.list.removeChild(target.parentElement);
+			toDo.list.removeChild(target.parentElement);
 		}
 	},
 
@@ -59,4 +59,4 @@ const ToDo = {
 	}
 }
 
-ToDo.init();
+toDo.init();
