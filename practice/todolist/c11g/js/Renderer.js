@@ -1,3 +1,5 @@
+import Task from './Task.js';
+
 const Renderer = class {
   constructor(container, todo) {
     this.todo = todo;
@@ -41,7 +43,8 @@ const Renderer = class {
     const { input } = this.el;
     const title = input.value.trim();
     if (!title) return alert('제목을 입력해 주세요!');
-    this.todo.addTask(title);
+    const task = new Task(title);
+    this.todo.addTask(task);
     this.render();
     input.value = '';
     input.focus();

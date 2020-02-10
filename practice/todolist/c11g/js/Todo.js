@@ -1,23 +1,10 @@
-const Task = class {
-  constructor(title, done = false) {
-    this.id = Date.now();
-    this.title = title;
-    this.done = done;
-  }
-
-  toggle() {
-    this.done = !this.done;
-  }
-};
-
 const Todo = class {
   constructor() {
     this.tasks = [];
   }
 
-  addTask(title) {
-    const t = new Task(title);
-    this.tasks.push(t);
+  addTask(task) {
+    this.tasks.push(task);
   }
 
   removeTask(task) {
