@@ -9,16 +9,21 @@ const toDo = {
 		const bindAddListItem = this.addListItem.bind(toDo),
 			bindResetList = this.resetList.bind(toDo);
 
+		this.input.addEventListener('keydown', bindAddListItem);
 		this.resetButton.addEventListener('click', bindResetList);
 		this.addButton.addEventListener('click', bindAddListItem);
 		this.list.addEventListener('click', this.addCheckboxToggle);
 		this.list.addEventListener('click', this.removeListItem);
 	},
 
-	addListItem () {
+	addListItem (e) {
 		const elementLI = document.createElement('li');
 		
-		if (this.input.value.trim().length <= 0) {
+		if (e.keyCode !== 13 && e.keyCode !== undefined) {
+			return;
+		}
+		
+		if (!this.input.value.trim().length) {
 			return alert('입력해주세요.');
 		}
 
@@ -28,10 +33,9 @@ const toDo = {
 		this.input.value = '';
 		this.input.focus();
 		this.list.appendChild(elementLI);
-
 	},
 	
-	addCheckboxToggle: (e) => {
+	addCheckboxToggle (e) {
 		const target = e.target;
 
 		if (target.classList.contains('todo-checkbox')) {
@@ -45,17 +49,22 @@ const toDo = {
 		}
 	},
 
-	removeListItem: (e) => {
+	removeListItem (e) {
 		const target = e.target; 
 
 		if (target.classList.contains('todo-delete')) {
-			toDo.list.removeChild(target.parentElement);
+			this.removeChild(target.parentElement);
 		}
 	},
 
 	resetList () {
 		localStorage.clear();
-		this.list.innerHTML = '';
+		if (this.input.value) {
+			this.input.value = '';
+		}
+		if (this.list.innerHTML.trim()) {
+			this.list.innerHTML = '';
+		}
 	}
 }
 
