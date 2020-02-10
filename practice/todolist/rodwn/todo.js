@@ -4,6 +4,7 @@ const toDo = {
 	addButton: document.querySelector('.todo-wrap .todo-add'),
 	input: document.querySelector('.todo-wrap .todo-input'),
 	list: document.querySelector('.todo-wrap .todo-list'),
+	localData: localStorage.getItem('todo-data') || null,
 
 	init () {
 		const bindAddListItem = this.addListItem.bind(toDo),
@@ -14,6 +15,10 @@ const toDo = {
 		this.addButton.addEventListener('click', bindAddListItem);
 		this.list.addEventListener('click', this.addCheckboxToggle);
 		this.list.addEventListener('click', this.removeListItem);
+
+		if (this.localData) {
+			this.list.innerHTML = this.localData;
+		}
 	},
 
 	addListItem (e) {
@@ -33,6 +38,7 @@ const toDo = {
 		this.input.value = '';
 		this.input.focus();
 		this.list.appendChild(elementLI);
+		localStorage.setItem('todo-data', this.list.innerHTML);
 	},
 	
 	addCheckboxToggle (e) {
@@ -47,6 +53,8 @@ const toDo = {
 				target.setAttribute('checked', 'checked')
 			}
 		}
+
+		localStorage.setItem('todo-data', this.innerHTML);
 	},
 
 	removeListItem (e) {
@@ -55,6 +63,8 @@ const toDo = {
 		if (target.classList.contains('todo-delete')) {
 			this.removeChild(target.parentElement);
 		}
+
+		localStorage.setItem('todo-data', this.innerHTML);
 	},
 
 	resetList () {
