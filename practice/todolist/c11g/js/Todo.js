@@ -1,14 +1,14 @@
 const Todo = class {
   constructor() {
-    this.tasks = [];
+    this.tasks = new Set();
   }
 
   addTask(task) {
-    this.tasks.push(task);
+    this.tasks.add(task);
   }
 
   removeTask(task) {
-    this.tasks = this.tasks.filter(({ id }) => id !== task.id);
+    this.tasks.delete(task);
   }
 }
 

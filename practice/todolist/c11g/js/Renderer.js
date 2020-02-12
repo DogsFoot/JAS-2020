@@ -3,6 +3,7 @@ import Task from './Task.js';
 const Renderer = class {
   constructor(container, todo) {
     this.todo = todo;
+    this.renderedTaskIDs = new Set();
 
     this.el = {
       input: container.querySelector('.todo-input'),
@@ -15,14 +16,12 @@ const Renderer = class {
   }
 
   render() {
-    const { tasks } = this.todo;
     const { ul, liTemplate } = this.el;
-    const oldTaskId = [...ul.querySelectorAll('li')].map(li => Number(li.id));
-
-    tasks.forEach(t => {
-      if (oldTaskId.includes(t.id)) return;
-      const li = document.importNode(liTemplate.content, true);
-      li.querySelector('li').id = t.id;
+    this.todo.tasks.forEach(t => {
+      if (this.renderedTaskIDs.has(t.id)) return;
+      this.renderedTaskIDs.add(t.id);
+      const li = document.importNode(liTemplate.content, true).querySelector('li');
+      li.dataset.id = t.id;
       li.querySelector('span').textContent = t.title;
       li.querySelector('input').addEventListener('click', e => this.toggleHandler(e, t));
       li.querySelector('button').addEventListener('click', _ => this.removeHandler(t));
@@ -35,7 +34,7 @@ const Renderer = class {
     addButton.addEventListener('click', _ => this.addHandler());
     input.addEventListener('keydown', e => {
       if (e.keyCode !== 13) return;
-      this.addHandler()
+      this.addHandler();
     });
   }
 
@@ -51,12 +50,9 @@ const Renderer = class {
   }
 
   removeHandler(t) {
-    const { tasks } = this.todo;
-    const removeIndex = tasks.findIndex(task => task === t);
     this.todo.removeTask(t);
-
-    const { ul } = this.el;
-    ul.querySelectorAll('li')[removeIndex].remove();
+    this.renderedTaskIDs.delete(t.id);
+    document.querySelector(`[data-id='${t.id}']`).remove();
   }
 
   toggleHandler(e, t) {
