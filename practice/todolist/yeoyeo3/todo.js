@@ -17,14 +17,14 @@ class Todo {
     const thisElementTodo = this.elementTodo;
     const thisTodoData = this.dataTodo;
 
-    this.elementBtnAdd.on('click', function(){
-      Todo.prototype.addTodo(thisElementTodo, thisTodoData);
+    this.elementBtnAdd.on('click', () => {
+      this.addTodo(thisElementTodo, thisTodoData);
     });
-    this.elementInput.on('keyup', function(e){
+    this.elementInput.on('keyup', (e) => {
       const enterKey = 13;
       const keyCode = e.keyCode;
       if(keyCode === enterKey) {
-        Todo.prototype.addTodo(thisElementTodo, thisTodoData);
+        this.addTodo(thisElementTodo, thisTodoData);
       }
     });
   }
@@ -33,11 +33,11 @@ class Todo {
     const thisElementTodo = this.elementTodo;
     const thisTodoData = this.dataTodo;
 
-    this.elementListTodo.on('click', function(e){
+    this.elementListTodo.on('click', (e) => {
       const thisElement = $(e.target);
       if(thisElement.hasClass('todo-delete')) {
         const thisElementTodoItem = thisElement.parent('li');
-        Todo.prototype.removeTodo(thisElementTodo, thisTodoData, thisElementTodoItem);
+        this.removeTodo(thisElementTodo, thisTodoData, thisElementTodoItem);
       }
     });
   }
@@ -46,11 +46,11 @@ class Todo {
     const thisElementTodo = this.elementTodo;
     const thisTodoData = this.dataTodo;
 
-    this.elementListTodo.on('click', function(e){
+    this.elementListTodo.on('click', (e) => {
       const thisElement = $(e.target);
       if(thisElement.hasClass('todo-checkbox')) {
         const thisElementTodoItem = thisElement.parent('li');
-        Todo.prototype.doneTodo(thisElementTodo, thisTodoData, thisElementTodoItem);
+        this.doneTodo(thisElementTodo, thisTodoData, thisElementTodoItem);
       }
     });
   }
