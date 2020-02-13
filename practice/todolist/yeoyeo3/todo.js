@@ -84,11 +84,17 @@ class Todo {
     const thisElementList = thisElementTodo.find('.todo-list');
     const toDoneItemIndex = thisElementTodoItem.attr('id');
 
-    thisTodoData[toDoneItemIndex - 1].status = 'done';
-    thisElementList.find('#' + toDoneItemIndex)
-      .find('input')
-      .attr('checked', 'checked')
-      .addClass('done');
+    if(thisElementTodoItem.find('input').hasClass('done')) {
+      thisTodoData[toDoneItemIndex - 1].status = 'todo';
+      thisElementList.find('#' + toDoneItemIndex).find('input')
+        .attr('checked', '')
+        .removeClass('done');
+    } else {
+      thisTodoData[toDoneItemIndex - 1].status = 'done';
+      thisElementList.find('#' + toDoneItemIndex).find('input')
+        .attr('checked', 'checked')
+        .addClass('done');
+    }
   }
 
   removeTodo(thisElementTodo, thisTodoData, thisElementTodoItem){
