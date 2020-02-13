@@ -87,12 +87,12 @@ class Todo {
     if(thisElementTodoItem.find('input').hasClass('done')) {
       thisTodoData[toDoneItemIndex - 1].status = 'todo';
       thisElementList.find('#' + toDoneItemIndex).find('input')
-        .attr('checked', '')
+        .attr('checked', false)
         .removeClass('done');
     } else {
       thisTodoData[toDoneItemIndex - 1].status = 'done';
       thisElementList.find('#' + toDoneItemIndex).find('input')
-        .attr('checked', 'checked')
+        .attr('checked', true)
         .addClass('done');
     }
   }
