@@ -1,9 +1,9 @@
 class Todo {
-  constructor(wrap) {
-    this.elementTodo = wrap;
-    this.elementInput = wrap.find('.todo-input');
-    this.elementBtnAdd = wrap.find('.todo-add');
-    this.elementListTodo = wrap.find('.todo-list');
+  constructor($wrap) {
+    this.elementTodo = $wrap;
+    this.elementInput = $wrap.find('.todo-input');
+    this.elementBtnAdd = $wrap.find('.todo-add');
+    this.elementListTodo = $wrap.find('.todo-list');
     this.dataTodo = [];
   }
 
