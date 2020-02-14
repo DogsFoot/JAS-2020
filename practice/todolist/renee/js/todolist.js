@@ -1,6 +1,8 @@
 import { addClass, removeClass } from "./classToggle.js";
 import template from "./todolistTemplate.js";
 
+let toDos = [];
+
 function checkboxHandler(e) {
   const checkbox = e.target;
   if(checkbox.classList.contains("done")) {
@@ -8,7 +10,7 @@ function checkboxHandler(e) {
     checkbox.removeAttribute("checked");
   } else {
     addClass(checkbox, "done");
-    checkbox.setAttribute("checked", "");
+    checkbox.setAttribute("checked", true);
   }
 }
 
@@ -22,9 +24,13 @@ function addToDoListHandler(elemValue, elemtodoBox) {
   const li = document.createElement("li");
   li.innerHTML = template;
   
+  const newId = toDos.length + 1;
   const span = li.querySelector("span");
   const checkbox = li.querySelector(".todo-checkbox");
   const removeButton = li.querySelector(".todo-delete");
+  
+  li.id = newId;
+  toDos.push(newId);
 
   span.innerText = elemValue;
   elemtodoBox.appendChild(li);
@@ -39,7 +45,7 @@ function addToDoListHandler(elemValue, elemtodoBox) {
 }
 
 function addButtonHandler(elemInput, elemtodoBox) {
-	const elemValue = elemInput.value;
+	const elemValue = elemInput.value.trim();
 
   if(elemValue == "") {
     alert("입력해주세요.");
