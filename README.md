@@ -52,7 +52,7 @@
 2. 과제 스펙 정리 단계
   - "dropdown 과제 스펙 정리"의 단계를 In progress로 이동
   - 기준 브랜치 dropdown 생성 후 원격에 푸쉬
-  - 과제 스펙을 정리, 스펙 정리는 dropdown 브랜치에서 진행하며, /dropdown/readme.md 파일에 작성
+  - 과제 스펙을 정리, 스펙 정리는 `master` 브랜치에서 진행하며, /dropdown/readme.md 파일에 작성
   - 정리가 완료되면 PR -> MERGE
   - 멤버 개인별로 이슈를 생성("조영광 dropdown 과제") : Todo 단계
 3. 과제 진행 단계
