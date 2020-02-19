@@ -14,51 +14,40 @@ class Todo {
   }
 
   addHandler(){
-    const thisElementTodo = this.elementTodo;
-    const thisTodoData = this.dataTodo;
-
     this.elementBtnAdd.on('click', () => {
-      this.addTodo(thisElementTodo, thisTodoData);
+      this.addTodo();
     });
     this.elementInput.on('keyup', (e) => {
       const enterKey = 13;
       const keyCode = e.keyCode;
       if(keyCode === enterKey) {
-        this.addTodo(thisElementTodo, thisTodoData);
+        this.addTodo();
       }
     });
   }
 
   removeHandler(){
-    const thisElementTodo = this.elementTodo;
-    const thisTodoData = this.dataTodo;
-
     this.elementListTodo.on('click', (e) => {
       const thisElement = $(e.target);
       if(thisElement.hasClass('todo-delete')) {
         const thisElementTodoItem = thisElement.parent('li');
-        this.removeTodo(thisElementTodo, thisTodoData, thisElementTodoItem);
+        this.removeTodo(thisElementTodoItem);
       }
     });
   }
 
   doneHandler(){
-    const thisElementTodo = this.elementTodo;
-    const thisTodoData = this.dataTodo;
-
     this.elementListTodo.on('click', (e) => {
       const thisElement = $(e.target);
       if(thisElement.hasClass('todo-checkbox')) {
         const thisElementTodoItem = thisElement.parent('li');
-        this.doneTodo(thisElementTodo, thisTodoData, thisElementTodoItem);
+        this.doneTodo(thisElementTodoItem);
       }
     });
   }
 
-  addTodo(thisElementTodo, thisTodoData){
-    const thisElementInput = thisElementTodo.find('.todo-input');
-    const thisElementList = thisElementTodo.find('.todo-list');
-    const content = thisElementInput.val();
+  addTodo(){
+    const content = this.elementInput.val();
 
     if(content === '') {
       alert('입력해주세요');
@@ -68,41 +57,39 @@ class Todo {
       
       newTodoData.status = 'todo';
       newTodoData.content = content;
-      thisTodoData.push(newTodoData);
+      this.dataTodo.push(newTodoData);
       
-      newTodoItem.attr('id', thisTodoData.length)
+      newTodoItem.attr('id', this.dataTodo.length)
         .append($('<input>').attr('type','checkbox').addClass('todo-checkbox'))
         .append($('<span>').text(content))
         .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
 
-      thisElementList.append(newTodoItem);
-      thisElementInput.val('');
+      this.elementListTodo.append(newTodoItem);
+      this.elementInput.val('');
     }
   }
 
-  doneTodo(thisElementTodo, thisTodoData, thisElementTodoItem){
-    const thisElementList = thisElementTodo.find('.todo-list');
+  doneTodo(thisElementTodoItem){
     const toDoneItemIndex = thisElementTodoItem.attr('id');
 
     if(thisElementTodoItem.find('input').hasClass('done')) {
-      thisTodoData[toDoneItemIndex - 1].status = 'todo';
-      thisElementList.find('#' + toDoneItemIndex).find('input')
+      this.dataTodo[toDoneItemIndex - 1].status = 'todo';
+      this.elementListTodo.find('#' + toDoneItemIndex).find('input')
         .attr('checked', false)
         .removeClass('done');
     } else {
-      thisTodoData[toDoneItemIndex - 1].status = 'done';
-      thisElementList.find('#' + toDoneItemIndex).find('input')
+      this.dataTodo[toDoneItemIndex - 1].status = 'done';
+      this.elementListTodo.find('#' + toDoneItemIndex).find('input')
         .attr('checked', true)
         .addClass('done');
     }
   }
 
-  removeTodo(thisElementTodo, thisTodoData, thisElementTodoItem){
-    const thisElementList = thisElementTodo.find('.todo-list');
+  removeTodo(thisElementTodoItem){
     const toRemoveItemIndex = thisElementTodoItem.attr('id');
 
-    thisTodoData.splice(toRemoveItemIndex - 1, 1);
-    thisElementList.find('#' + toRemoveItemIndex).remove();
+    this.dataTodo.splice(toRemoveItemIndex - 1, 1);
+    this.elementListTodo.find('#' + toRemoveItemIndex).remove();
   }
 }
 
