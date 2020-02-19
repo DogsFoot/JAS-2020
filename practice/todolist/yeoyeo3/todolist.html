@@ -16,6 +16,7 @@
 		.todo-list .todo-checkbox.done + span{color:#999;text-decoration:line-through}
 		.todo-list{padding-top:10px}
 		.todo-list li{position:relative;margin-top:10px;padding-right:50px;height:25px;line-height:25px}
+		.todo-checkbox{margin-right: 4px}
 		.todo-list .todo-delete{position:absolute;right:0;top:0;bottom:0;width:50px;background-color:#888;color:#fff;border:0;border-radius:3px;font-size:12px;line-height:25px}
 		</style>
   </head>
@@ -60,6 +61,5 @@
   <script src="todo.js"></script>
   <script>
     const todoApp = new Todo( $('#todoApp') );
-    todoApp.init();
   </script>
 </html>
