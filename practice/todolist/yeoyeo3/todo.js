@@ -29,16 +29,34 @@ class Todo {
   }
 
   storageData(action, data) {
+    const getDataIndex = function(id) {
+      let getIndex;
+      allTodoDatas.some( (todo, index) => {
+        if( id == todo.id ) {
+          getIndex = index;
+        }
+      });
+      return getIndex;
+    }
+
     let allTodoDatas = localStorage.getItem(this.localStorageKey);
     allTodoDatas = JSON.parse(allTodoDatas);
     if(action === 'get'){
       return allTodoDatas;
     }
+    if(action === 'getIndex'){
+      return getDataIndex(data);
+    }
     if(action === 'add'){
       allTodoDatas.push(data);
     }
+    if(action === 'remove'){
+      const thisDataIndex = getDataIndex(data);
+      allTodoDatas.splice(thisDataIndex, 1);
+    }
     if(action === 'doneModify'){
-      allTodoDatas[data].done = !allTodoDatas[data].done;
+      const thisDataIndex = getDataIndex(data);
+      allTodoDatas[thisDataIndex].done = !allTodoDatas[thisDataIndex].done;
     }
     localStorage.setItem(this.localStorageKey, JSON.stringify(allTodoDatas));
   }
@@ -103,12 +121,7 @@ class Todo {
   doneTodo(thisElementTodoItem){
     const toDoneItemIndex = thisElementTodoItem.attr('id');
     const allTodoDatas = this.storageData('get');
-    let todoDataIndex = '';
-    allTodoDatas.some( (todo, index) => {
-      if( toDoneItemIndex == todo.id ) {
-        todoDataIndex = index;
-      }
-    });
+    let todoDataIndex = this.storageData('getIndex', toDoneItemIndex);
 
     if(allTodoDatas[todoDataIndex].done === true){
       this.elementListTodo.find('#' + toDoneItemIndex).find('input')
@@ -120,15 +133,12 @@ class Todo {
         .addClass('done');
     }
 
-    this.storageData('doneModify', todoDataIndex);
+    this.storageData('doneModify', toDoneItemIndex);
   }
 
   removeTodo(thisElementTodoItem){
     const toRemoveItemIndex = thisElementTodoItem.attr('id');
-
-
-    this.storageData('remove', newTodoData);
-    localStorage.removeItem(toRemoveItemIndex);
+    this.storageData('remove', toRemoveItemIndex);
     this.elementListTodo.find('#' + toRemoveItemIndex).remove();
   }
 }
