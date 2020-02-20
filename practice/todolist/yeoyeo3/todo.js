@@ -20,6 +20,9 @@ class Todo {
           .append($('<input>').attr('type','checkbox').addClass('todo-checkbox'))
           .append($('<span>').text(todo.content))
           .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
+        if(todo.done === true){
+          newTodoItem.find('input').attr('checked', true).addClass('done');
+        }
         this.elementListTodo.append(newTodoItem);
       });
     }
