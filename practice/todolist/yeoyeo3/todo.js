@@ -31,13 +31,13 @@ class Todo {
   storageData(action, data) {
     let allTodoDatas = localStorage.getItem(this.localStorageKey);
     allTodoDatas = JSON.parse(allTodoDatas);
-    if(action == 'get'){
+    if(action === 'get'){
       return allTodoDatas;
     }
-    if(action == 'add'){
+    if(action === 'add'){
       allTodoDatas.push(data);
     }
-    if(action == 'doneModify'){
+    if(action === 'doneModify'){
       allTodoDatas[data].done = !allTodoDatas[data].done;
     }
     localStorage.setItem(this.localStorageKey, JSON.stringify(allTodoDatas));
