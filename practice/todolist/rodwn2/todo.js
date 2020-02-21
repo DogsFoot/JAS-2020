@@ -3,27 +3,53 @@ class Todo {
 		this.domElement = {
 			input: document.querySelector(`${todoSelector} .todo-input`),
 			addButton: document.querySelector(`${todoSelector} .todo-add`),
-			list: document.querySelector(`${todoSelector} .todo-list`)
+			list: document.querySelector(`${todoSelector} .todo-list`),
+			clearButton: document.querySelector('.btn-reset')
 		}
 
 		this.addEvents();
+		this.loadData;
 	}
 
 	todoData = [];
 	#id = 1;
 
 	addEvents () {
-		this.domElement.addButton.addEventListener('click', this.addTodoHandler(this));
-		this.domElement.input.addEventListener('keydown', this.addTodoHandler(this));
+		const {input, addButton, clearButton} = this.domElement;
+
+		addButton.addEventListener('click', this.addTodoHandler(this));
+		input.addEventListener('keydown', this.addTodoHandler(this));
+		clearButton.addEventListener('click', () => {
+			this.todoData = [];
+			this.#id = 1;
+			this.constructor.clearLocalStorage();
+		})
 	}
 
 	get todoTemplate () {
 		return `<input type="checkbox" class="todo-checkbox"><span></span><button type="button" class="todo-delete">삭제</button>`;
 	}
 
+	get loadData () {
+		if (!localStorage['todo']) {
+			return false;
+		}
+		this.todoData = JSON.parse(localStorage.getItem('todo'));
+		this.render();
+		return;
+	}
+
 	set pushToData (todoElement) {
 		this.todoData.push(todoElement);
 		console.table(this.todoData);
+	}
+
+	set saveData (todoData) {
+		if (!todoData.length) {
+			delete localStorage['todo'];
+			return;
+		}
+		localStorage.setItem('todo', JSON.stringify(todoData));
 	}
 	
 	render () {
@@ -45,20 +71,23 @@ class Todo {
 		});
 	}
 
-	addTodoHandler (that) {
+	addTodoHandler (that) {		
 		return function (e) {
+			const {input} = that.domElement;
+
 			if (e.keyCode !== 13 && e.keyCode !== undefined) {
 				return;
 			}
-			if (!that.domElement.input.value.trim()) {
+			if (!input.value.trim()) {
 				alert('다시 입력해주세요');
 			} else {
-				that.pushToData = new TodoElement (that.domElement.input.value, that.#id++);
+				that.pushToData = new TodoElement (input.value, that.#id++);
 				that.render();
 			}
 
-			that.domElement.input.value = '';
-			that.domElement.input.focus();
+			input.value = '';
+			input.focus();
+			that.saveData = that.todoData;
 		}
 	}
 
@@ -77,6 +106,7 @@ class Todo {
 		
 				return isMatchID;
 			});
+			that.saveData = that.todoData;
 			console.table(that.todoData);
 		}
 	}
@@ -103,15 +133,22 @@ class Todo {
 
 				return isMatchID;
 			});
+			that.saveData = that.todoData;
 			console.table(that.todoData);
 		}
+	}
+
+	static clearLocalStorage () {
+		document.querySelector('.todo-list').innerHTML = null;
+		localStorage.clear();
+		console.log('clear completed!');
 	}
 }
 
 class TodoElement {
-	constructor (content, id, done = false) {
+	constructor (content, id) {
 		this.content = content;
 		this.id = id;
-		this.done = done;
+		this.done = false;
 	}
 }
