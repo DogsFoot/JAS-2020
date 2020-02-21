@@ -34,7 +34,11 @@ class Todo {
 		if (!localStorage['todo']) {
 			return false;
 		}
-		this.todoData = JSON.parse(localStorage.getItem('todo'));
+		const loadedData = JSON.parse(localStorage.getItem('todo'));
+
+		loadedData.forEach (element => {
+			this.pushToData = new TodoElement (element.content, element.id, element.done);
+		});
 		this.render();
 		return;
 	}
@@ -56,7 +60,7 @@ class Todo {
 		const {list} = this.domElement;
 		
 		if (list.hasChildNodes()) {
-			list.innerHTML = null;
+			list.innerHTML = '';
 		}
 		this.todoData.forEach((element) => {
 			const liElement = document.createElement('li');
@@ -65,13 +69,17 @@ class Todo {
 			const [checkbox, span, button] = liElement.children;
 
 			checkbox.addEventListener('click', this.checkboxToggleHandler(this));
+			if (element.done) {
+				checkbox.classList.add('done');
+				checkbox.setAttribute('checked', 'checked');
+			}
 			span.textContent = element.content;
 			button.addEventListener('click', this.removeButtonClickHandler(this));
 			list.append(liElement);
 		});
 	}
 
-	addTodoHandler (that) {		
+	addTodoHandler (that) {
 		return function (e) {
 			const {input} = that.domElement;
 
@@ -139,16 +147,16 @@ class Todo {
 	}
 
 	static clearLocalStorage () {
-		document.querySelector('.todo-list').innerHTML = null;
+		document.querySelector('.todo-list').innerHTML = '';
 		localStorage.clear();
 		console.log('clear completed!');
 	}
 }
 
 class TodoElement {
-	constructor (content, id) {
+	constructor (content, id, done = false) {
 		this.content = content;
 		this.id = id;
-		this.done = false;
+		this.done = done;
 	}
 }
