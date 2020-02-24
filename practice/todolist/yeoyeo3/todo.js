@@ -111,7 +111,7 @@ class Todo {
     const allTodoDatas = this.storageData('get');
     let todoDataIndex = this.storageData('getIndex', toDoneItemIndex);
 
-    if(allTodoDatas[todoDataIndex].done === true){
+    if(allTodoDatas[todoDataIndex].done){
       this.$elementListTodo.find('#' + toDoneItemIndex).find('input')
         .attr('checked', false)
         .removeClass('done');
@@ -136,7 +136,7 @@ class Todo {
       .append($('<input>').attr('type','checkbox').addClass('todo-checkbox'))
       .append($('<span>').text(todo.content))
       .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
-    if(todo.done === true){
+    if(todo.done){
       newTodoItem.find('input').attr('checked', true).addClass('done');
     }
     this.$elementListTodo.append(newTodoItem);
