@@ -9,9 +9,9 @@ class Todo {
   }
 
   init(){
-    const inintData = [];
+    const initData = [];
     if(!localStorage.getItem(this.localStorageKey)){
-      localStorage.setItem(this.localStorageKey, JSON.stringify(inintData));
+      localStorage.setItem(this.localStorageKey, JSON.stringify(initData));
     } else {
       let allTodoDatas = this.storageData('get');
       allTodoDatas.forEach(todo => {
