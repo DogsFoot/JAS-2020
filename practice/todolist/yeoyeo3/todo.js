@@ -14,15 +14,7 @@ class Todo {
     } else {
       let allTodoDatas = this.storageData('get');
       allTodoDatas.forEach(todo => {
-        const newTodoItem = $('<li>');
-        newTodoItem.attr('id', todo.id)
-          .append($('<input>').attr('type','checkbox').addClass('todo-checkbox'))
-          .append($('<span>').text(todo.content))
-          .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
-        if(todo.done === true){
-          newTodoItem.find('input').attr('checked', true).addClass('done');
-        }
-        this.$elementListTodo.append(newTodoItem);
+        this.rander(todo);
       });
     }
 		this.addHandler();
@@ -109,13 +101,7 @@ class Todo {
     } else {
       const newTodoData = new CreatTodoData(content);
       this.storageData('add', newTodoData);
-      const newTodoItem = $('<li>');
-      newTodoItem.attr('id', newTodoData.id)
-        .append($('<input>').attr('type','checkbox').addClass('todo-checkbox'))
-        .append($('<span>').text(content))
-        .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
-
-      this.$elementListTodo.append(newTodoItem);
+      this.rander(newTodoData);
       this.$elementInput.val('');
     }
   }
@@ -142,6 +128,18 @@ class Todo {
     const toRemoveItemIndex = thisElementTodoItem.attr('id');
     this.storageData('remove', toRemoveItemIndex);
     this.$elementListTodo.find('#' + toRemoveItemIndex).remove();
+  }
+
+  rander(todo){
+    const newTodoItem = $('<li>');
+    newTodoItem.attr('id', todo.id)
+      .append($('<input>').attr('type','checkbox').addClass('todo-checkbox'))
+      .append($('<span>').text(todo.content))
+      .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
+    if(todo.done === true){
+      newTodoItem.find('input').attr('checked', true).addClass('done');
+    }
+    this.$elementListTodo.append(newTodoItem);
   }
 }
 
