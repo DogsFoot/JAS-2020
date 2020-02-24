@@ -22,6 +22,7 @@ class Todo {
 		this.doneHandler(); 
   }
 
+  // tobe : Class 밖으로 뺴보기
   storageData(action, data) {
     const getDataIndex = function(id) {
       let getIndex;
@@ -35,6 +36,8 @@ class Todo {
 
     let allTodoDatas = localStorage.getItem(this.localStorageKey);
     allTodoDatas = JSON.parse(allTodoDatas);
+
+    // tobe : Switch문법 활용해보기
     if(action === 'get'){
       return allTodoDatas;
     }
@@ -90,6 +93,7 @@ class Todo {
 
   addTodo(){
     const content = this.$elementInput.val();
+    // tobe : Class 밖으로 뺴보기
     const CreatTodoData = function(content){
       this.id = new Date().getTime();
       this.content = content;
