@@ -1,10 +1,9 @@
 class Todo {
   constructor($wrap) {
-    this.elementTodo = $wrap;
-    this.elementInput = $wrap.find('.todo-input');
-    this.elementBtnAdd = $wrap.find('.todo-add');
-    this.elementListTodo = $wrap.find('.todo-list');
-    this.localStorageKey = this.elementTodo.attr('id');
+    this.$elementInput = $wrap.find('.todo-input');
+    this.$elementBtnAdd = $wrap.find('.todo-add');
+    this.$elementListTodo = $wrap.find('.todo-list');
+    this.localStorageKey = $wrap.attr('id');
     this.init();
   }
 
@@ -23,7 +22,7 @@ class Todo {
         if(todo.done === true){
           newTodoItem.find('input').attr('checked', true).addClass('done');
         }
-        this.elementListTodo.append(newTodoItem);
+        this.$elementListTodo.append(newTodoItem);
       });
     }
 		this.addHandler();
@@ -65,10 +64,10 @@ class Todo {
   }
 
   addHandler(){
-    this.elementBtnAdd.on('click', () => {
+    this.$elementBtnAdd.on('click', () => {
       this.addTodo();
     });
-    this.elementInput.on('keyup', (e) => {
+    this.$elementInput.on('keyup', (e) => {
       const enterKey = 13;
       const keyCode = e.keyCode;
       if(keyCode === enterKey) {
@@ -78,7 +77,7 @@ class Todo {
   }
 
   removeHandler(){
-    this.elementListTodo.on('click', (e) => {
+    this.$elementListTodo.on('click', (e) => {
       const thisElement = $(e.target);
       if(thisElement.hasClass('todo-delete')) {
         const thisElementTodoItem = thisElement.parent('li');
@@ -88,7 +87,7 @@ class Todo {
   }
 
   doneHandler(){
-    this.elementListTodo.on('click', (e) => {
+    this.$elementListTodo.on('click', (e) => {
       const thisElement = $(e.target);
       if(thisElement.hasClass('todo-checkbox')) {
         const thisElementTodoItem = thisElement.parent('li');
@@ -98,7 +97,7 @@ class Todo {
   }
 
   addTodo(){
-    const content = this.elementInput.val();
+    const content = this.$elementInput.val();
     const CreatTodoData = function(content){
       this.id = new Date().getTime();
       this.content = content;
@@ -116,8 +115,8 @@ class Todo {
         .append($('<span>').text(content))
         .append($('<button>').attr('type','button').addClass('todo-delete').text('삭제'));
 
-      this.elementListTodo.append(newTodoItem);
-      this.elementInput.val('');
+      this.$elementListTodo.append(newTodoItem);
+      this.$elementInput.val('');
     }
   }
 
@@ -127,11 +126,11 @@ class Todo {
     let todoDataIndex = this.storageData('getIndex', toDoneItemIndex);
 
     if(allTodoDatas[todoDataIndex].done === true){
-      this.elementListTodo.find('#' + toDoneItemIndex).find('input')
+      this.$elementListTodo.find('#' + toDoneItemIndex).find('input')
         .attr('checked', false)
         .removeClass('done');
     } else {
-      this.elementListTodo.find('#' + toDoneItemIndex).find('input')
+      this.$elementListTodo.find('#' + toDoneItemIndex).find('input')
         .attr('checked', true)
         .addClass('done');
     }
@@ -142,7 +141,7 @@ class Todo {
   removeTodo(thisElementTodoItem){
     const toRemoveItemIndex = thisElementTodoItem.attr('id');
     this.storageData('remove', toRemoveItemIndex);
-    this.elementListTodo.find('#' + toRemoveItemIndex).remove();
+    this.$elementListTodo.find('#' + toRemoveItemIndex).remove();
   }
 }
 
