@@ -65,6 +65,98 @@
 				<td><button type="button" data-btn="calculate">=</button></td>
 			</tr>
 		</tbody>
-	</table>
+  </table>
+<script>
+const Calculator = {
+  isTyping: false,
+  acc: 0,
+  input: '',
+  expr: [],
+  el: {
+    input: [
+      ...document.querySelectorAll('[data-number]'),
+      document.querySelector('[data-symbol=dot]'),
+      document.querySelector('[data-symbol=plusMinus]')
+    ],
+    operator: [...document.querySelectorAll('[data-operator]')],
+    calculate: document.querySelector('[data-btn=calculate]'),
+    reset: document.querySelector('[data-btn=reset]'),
+    resultScreen: document.querySelector('[data-output=result]'),
+    exprScreen: document.querySelector('[data-output=expression]'),
+  },
+
+  display(){
+    const {resultScreen,exprScreen} = this.el;
+    resultScreen.textContent = this.isTyping ? this.input : this.acc;
+    exprScreen.textContent = this.expr.join(' ');
+  },
+
+  calc(){
+    this.acc = Number(this.input);
+    this.isTyping = false;
+  },
+
+  inputHandler(e){
+    const value = e.target.textContent;
+    switch(value){
+      case '.':
+        if(this.input.includes('.')) return;
+        this.input = (this.input === '') ? '0.' : this.input + '.';
+      break;
+      case '+/-':
+        this.input = (Number(this.input) * -1).toString();
+      break;
+      case '0':
+        // 처음 0 누를 때
+        if(this.input === '') return;
+      default: // 0~9
+        this.input += value;
+    }
+    this.isTyping = true;
+    this.display();
+  },
+
+  operatorHandler(e){
+    const operator = e.target.textContent;
+    
+    if(!this.isTyping) return;
+    
+    this.acc = Number(this.input);
+    this.expr = [...this.expr,Number(this.input),operator];
+    this.input = '';
+    
+    this.isTyping = false;
+    this.display();
+  },
+
+  calcHandler(){
+    this.calc();
+    this.display();
+  },
+
+  clearHandler(){
+    this.acc = 0;
+    this.input = '';
+    this.expr = [];
+    this.display();
+  },
+
+  addEvents(){
+    const {input,operator,calculate,reset} = this.el;
+    input.forEach(button => button.addEventListener('click', e => this.inputHandler(e)));
+    operator.forEach(button => button.addEventListener('click', e => this.operatorHandler(e)));
+    calculate.addEventListener('click', () => this.calcHandler());
+    reset.addEventListener('click', () => this.clearHandler());
+  },
+
+  init(){
+    this.addEvents();
+    this.clearHandler()
+  }
+
+
+};
+Calculator.init();
+</script>
 </body>
 </html>
