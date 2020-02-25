@@ -19,14 +19,11 @@ const Todo = class {
   }
 
   load() {
-    if (!localStorage.getItem(this.STORAGE_KEY)) return null;
-    const data = JSON.parse(localStorage.getItem(this.STORAGE_KEY));
-    const savedTask = data.reduce((tasks, t) => {
-      const task = new Task(t.title, t.id, t.done);
-      tasks.add(task);
-      return tasks;
-    }, new Set());
-    return savedTask;
+    return !localStorage.getItem(this.STORAGE_KEY)
+    ? null
+    : new Set(JSON.parse(localStorage.getItem(this.STORAGE_KEY),
+      (k, v) => (v.constructor === Object) ? new Task(v.title, v.id, v.done) : v
+    ));
   }
 }
 
