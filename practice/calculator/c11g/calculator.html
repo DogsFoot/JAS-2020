@@ -68,10 +68,11 @@
   </table>
 <script>
 const Calculator = {
-  isTyping: false,
   acc: 0,
   input: '',
-  expr: [],
+  expr: '',
+  lastOperand: 0,
+  lastOperator: '',
   el: {
     input: [
       ...document.querySelectorAll('[data-number]'),
@@ -81,19 +82,14 @@ const Calculator = {
     operator: [...document.querySelectorAll('[data-operator]')],
     calculate: document.querySelector('[data-btn=calculate]'),
     reset: document.querySelector('[data-btn=reset]'),
-    resultScreen: document.querySelector('[data-output=result]'),
+    screen: document.querySelector('[data-output=result]'),
     exprScreen: document.querySelector('[data-output=expression]'),
   },
 
   display(){
-    const {resultScreen,exprScreen} = this.el;
-    resultScreen.textContent = this.isTyping ? this.input : this.acc;
-    exprScreen.textContent = this.expr.join(' ');
-  },
-
-  calc(){
-    this.acc = Number(this.input);
-    this.isTyping = false;
+    const {screen,exprScreen} = this.el;
+    screen.textContent = this.input ? `i ${this.input}` : `a ${this.acc}`;
+    exprScreen.textContent = this.expr;
   },
 
   inputHandler(e){
@@ -101,44 +97,67 @@ const Calculator = {
     switch(value){
       case '.':
         if(this.input.includes('.')) return;
-        this.input = (this.input === '') ? '0.' : this.input + '.';
+        this.input = !this.input ? '0.' : this.input + '.';
       break;
       case '+/-':
-        this.input = (Number(this.input) * -1).toString();
+        if(!this.input) return;
+        this.input = (parseFloat(this.input) * -1).toString();
       break;
       case '0':
         // 처음 0 누를 때
-        if(this.input === '') return;
+        if(!this.input) return;
       default: // 0~9
         this.input += value;
     }
-    this.isTyping = true;
     this.display();
   },
 
-  operatorHandler(e){
+  calc(operator, operand){
+    if(!operator || !operand) return;
+    switch(operator){
+      case '+': return this.acc + operand;
+      case '-': return this.acc - operand;
+      case '×': return this.acc * operand;
+      case '÷': return this.acc / operand;
+      default: return null;
+    }
+  },
+
+  operatorHandler(e){    
+    const operand = parseFloat(this.input);
     const operator = e.target.textContent;
     
-    if(!this.isTyping) return;
+    if(!this.lastOperator && !operand) return; // 첫 연산에서 입력 없이 기호를 누른 경우 바로 return
     
-    this.acc = Number(this.input);
-    this.expr = [...this.expr,Number(this.input),operator];
-    this.input = '';
-    
-    this.isTyping = false;
-    this.display();
-  },
+    if(this.lastOperator && !operand) {
+    // 입력 값은 없지만, 직전 연산 기호가 있을 때: 연산 기호를 연달아 누른 경우 expr 수정
+      this.expr = this.expr.slice(0,-3);
+      this.expr += ` ${operator} `;
+    } else {
+      this.acc = this.lastOperator
+        ? this.calc(this.lastOperator, operand) // 주의, 연산은 기호 누른 다음에 피 연산자를 필요로 하기 때문에 지금 누른 기호는 항상 다음 기호 누를 때 동작한다.
+        : operand; // 첫 연산일 때, 입력 값을 바로 누적 값으로 저장(피 연산자가 없기 때문에 연산과정 필요 x)
+      
+      this.expr += `${operand} ${operator} `;
+      this.lastOperand = operand;
+    }
 
-  calcHandler(){
-    this.calc();
+    this.lastOperator = operator; // 직전 연산 기호 갱신
+    this.input = '';
     this.display();
   },
 
   clearHandler(){
     this.acc = 0;
     this.input = '';
-    this.expr = [];
+    this.expr = '';
+    this.lastOperator = '';
+    this.lastOperand = 0;
     this.display();
+  },
+
+  calcHandler(){
+
   },
 
   addEvents(){
@@ -153,8 +172,6 @@ const Calculator = {
     this.addEvents();
     this.clearHandler()
   }
-
-
 };
 Calculator.init();
 </script>
