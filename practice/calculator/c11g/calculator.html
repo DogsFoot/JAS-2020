@@ -100,12 +100,14 @@ const Calculator = {
         this.input = !this.input ? '0.' : this.input + '.';
       break;
       case '+/-':
-        if(!this.input) return;
-        this.input = (parseFloat(this.input) * -1).toString();
+				if(!this.lastOperator && !this.input) return;
+        this.input = this.input
+					? (parseFloat(this.input) * -1).toString()
+					: this.acc * -1; // 연산 도중에 입력 없이 누르면 현재 누적 값이 입력 값이 됌
       break;
       case '0':
         // 처음 0 누를 때
-        if(!this.input) return;
+        if(!this.lastOperator && !this.input) return;
       default: // 0~9
         this.input += value;
     }
@@ -127,18 +129,20 @@ const Calculator = {
     const operand = parseFloat(this.input);
     const operator = e.target.textContent;
     
-    if(!this.lastOperator && !operand) return; // 첫 연산에서 입력 없이 기호를 누른 경우 바로 return
+    if(!this.lastOperator && !operand) return; // 연산 기호부터 누른 경우
     
     if(this.lastOperator && !operand) {
-    // 입력 값은 없지만, 직전 연산 기호가 있을 때: 연산 기호를 연달아 누른 경우 expr 수정
+    // 연산 기호를 연달아 누른 경우
       this.expr = this.expr.slice(0,-3);
       this.expr += ` ${operator} `;
     } else {
+			// 입력 후 정상적으로 연산 기호 누른 경우
+			// 주의, 연산은 기호 누른 다음에 피 연산자를 필요로 하기 때문에 지금 누른 기호는 항상 다음 기호 누를 때 동작한다.
       this.acc = this.lastOperator
-        ? this.calc(this.lastOperator, operand) // 주의, 연산은 기호 누른 다음에 피 연산자를 필요로 하기 때문에 지금 누른 기호는 항상 다음 기호 누를 때 동작한다.
+        ? this.calc(this.lastOperator, operand)
         : operand; // 첫 연산일 때, 입력 값을 바로 누적 값으로 저장(피 연산자가 없기 때문에 연산과정 필요 x)
       
-      this.expr += `${operand} ${operator} `;
+      this.expr += `${operand < 0 ? `(${operand})`: operand} ${operator} `;
       this.lastOperand = operand;
     }
 
@@ -157,7 +161,17 @@ const Calculator = {
   },
 
   calcHandler(){
-
+		let operand = parseFloat(this.input);
+    
+    if(!this.lastOperator && !operand) return; // 연산 기호부터 누른 경우
+    if(!operand) operand = this.lastOperand;
+		
+		this.acc = this.calc(this.lastOperator, operand);
+		this.expr += `${operand < 0 ? `(${operand})`: operand} ${this.lastOperator} `;
+		this.lastOperand = operand;
+		
+		this.input = '';
+    this.display();
   },
 
   addEvents(){
