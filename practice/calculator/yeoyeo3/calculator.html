@@ -19,7 +19,7 @@
 	</style>
 </head>
 <body>
-	<table>
+	<table id="calculator">
 		<colgroup>
 			<col style="width: 25%">
 			<col style="width: 25%">
@@ -66,6 +66,10 @@
 			</tr>
 		</tbody>
     </table>
-    <script src="calculator.js"></script>
+	<script src="calculator.js"></script>
+	<script>
+		const calculatorEelment = document.querySelector('#calculator');
+		const calculatorApp = new Calculator( calculatorEelment );
+	</script>
 </body>
 </html>
