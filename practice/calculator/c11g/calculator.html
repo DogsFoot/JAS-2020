@@ -68,6 +68,7 @@
   </table>
 <script>
 const Calculator = {
+  status: 0, // 0: initial, 1: input, 2: operator, 3: done
   acc: 0,
   input: '',
   expr: '',
@@ -88,8 +89,18 @@ const Calculator = {
 
   display(){
     const {screen,exprScreen} = this.el;
-    screen.textContent = this.input ? `i ${this.input}` : `a ${this.acc}`;
+    screen.textContent = this.input ? `${this.input}` : `${this.acc}`;
     exprScreen.textContent = this.expr;
+  },
+
+  calc(operator, operand){
+    switch(operator){
+      case '+': return this.acc + operand;
+      case '-': return this.acc - operand;
+      case '×': return this.acc * operand;
+      case '÷': return this.acc / operand;
+      default: return null;
+    }
   },
 
   inputHandler(e){
@@ -100,78 +111,77 @@ const Calculator = {
         this.input = !this.input ? '0.' : this.input + '.';
       break;
       case '+/-':
-				if(!this.lastOperator && !this.input) return;
+				if(this.status === 0) return;
         this.input = this.input
 					? (parseFloat(this.input) * -1).toString()
 					: this.acc * -1; // 연산 도중에 입력 없이 누르면 현재 누적 값이 입력 값이 됌
       break;
-      case '0':
-        // 처음 0 누를 때
-        if(!this.lastOperator && !this.input) return;
       default: // 0~9
+        if(this.status === 3) {
+          this.acc = 0;
+          this.expr = '';
+        }
+        if(this.input === '0') this.input = '';
         this.input += value;
     }
     this.display();
+    this.status = 1;
   },
-
-  calc(operator, operand){
-    if(!operator || !operand) return;
-    switch(operator){
-      case '+': return this.acc + operand;
-      case '-': return this.acc - operand;
-      case '×': return this.acc * operand;
-      case '÷': return this.acc / operand;
-      default: return null;
-    }
-  },
-
+  
   operatorHandler(e){    
     const operand = parseFloat(this.input);
     const operator = e.target.textContent;
     
-    if(!this.lastOperator && !operand) return; // 연산 기호부터 누른 경우
-    
-    if(this.lastOperator && !operand) {
-    // 연산 기호를 연달아 누른 경우
-      this.expr = this.expr.slice(0,-3);
-      this.expr += ` ${operator} `;
-    } else {
-			// 입력 후 정상적으로 연산 기호 누른 경우
-			// 주의, 연산은 기호 누른 다음에 피 연산자를 필요로 하기 때문에 지금 누른 기호는 항상 다음 기호 누를 때 동작한다.
-      this.acc = this.lastOperator
-        ? this.calc(this.lastOperator, operand)
-        : operand; // 첫 연산일 때, 입력 값을 바로 누적 값으로 저장(피 연산자가 없기 때문에 연산과정 필요 x)
-      
-      this.expr += `${operand < 0 ? `(${operand})`: operand} ${operator} `;
-      this.lastOperand = operand;
+    switch(this.status) {
+      case 0: return; // 연산 기호부터 누른 경우
+      case 1:
+        this.expr += `${operand < 0 ? `(${operand})`: operand} ${operator} `;
+        this.acc = this.lastOperator ? this.calc(this.lastOperator, operand) : operand;
+        this.lastOperand = operand;
+      break;
+      case 2: // 연산 기호를 연달아 누른 경우
+        this.expr = this.expr.slice(0,-3);
+        this.expr += ` ${operator} `;
+      break;
+      case 3:
+        this.input = this.acc;
+        this.expr = `${this.acc} ${operator} `;
+      break;
+      default: return;
     }
 
     this.lastOperator = operator; // 직전 연산 기호 갱신
     this.input = '';
     this.display();
-  },
-
-  clearHandler(){
-    this.acc = 0;
-    this.input = '';
-    this.expr = '';
-    this.lastOperator = '';
-    this.lastOperand = 0;
-    this.display();
+    this.status = 2;
   },
 
   calcHandler(){
 		let operand = parseFloat(this.input);
-    
-    if(!this.lastOperator && !operand) return; // 연산 기호부터 누른 경우
-    if(!operand) operand = this.lastOperand;
-		
-		this.acc = this.calc(this.lastOperator, operand);
-		this.expr += `${operand < 0 ? `(${operand})`: operand} ${this.lastOperator} `;
-		this.lastOperand = operand;
+
+    switch(this.status) {
+      case 0: return;
+      case 1:
+        this.expr += `${operand < 0 ? `(${operand})`: operand} = `;
+        this.acc = this.lastOperand ? this.calc(this.lastOperator, operand) : operand;
+        this.lastOperand = operand;
+      break;
+      case 2:
+        if(!operand) operand = this.acc;
+        this.expr += `${operand < 0 ? `(${operand})`: operand} = `;
+        this.acc = this.calc(this.lastOperator, operand);
+        this.lastOperand = operand;
+      break;
+      case 3: 
+        this.expr = `${this.acc} ${this.lastOperator} ${this.lastOperand} = `;
+        this.acc = this.calc(this.lastOperator, this.lastOperand);
+      break;
+      default: return;
+    }
 		
 		this.input = '';
     this.display();
+    this.status = 3;
   },
 
   addEvents(){
@@ -182,12 +192,29 @@ const Calculator = {
     reset.addEventListener('click', () => this.clearHandler());
   },
 
+  clearHandler(){
+    this.status = 0;
+    this.acc = 0;
+    this.input = '';
+    this.expr = '';
+    this.lastOperand = null;
+    this.lastOperator = '';
+    this.display();
+  },
+
   init(){
     this.addEvents();
     this.clearHandler()
   }
 };
 Calculator.init();
+
+/* TODO
+- % 연산
+- 키보드 조작
+- 코드 리팩토링, 파일 분리
+- , 포맷팅 ?
+*/
 </script>
 </body>
 </html>
