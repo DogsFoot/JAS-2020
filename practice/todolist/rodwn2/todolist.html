@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
 		<title>ToDoList</title>
 		<style>
 		input{margin:0;padding:0}
@@ -16,12 +16,12 @@
 		.todo-list .todo-checkbox.done + span{color:#999;text-decoration:line-through}
 		.todo-list{padding-top:10px}
 		.todo-list li{position:relative;margin-top:10px;padding-right:50px;height:25px;line-height:25px}
-		.todo-checkbox{margin-right: 4px}
 		.todo-list .todo-delete{position:absolute;right:0;top:0;bottom:0;width:50px;background-color:#888;color:#fff;border:0;border-radius:3px;font-size:12px;line-height:25px}
 		</style>
-  </head>
-  <body>
-		<div class="todo-wrap" id="todoApp">
+	</head>
+	<body>
+		<button type="button" class="btn-reset" style="display: block;margin: 50px auto 0;">초기화</button>
+		<div class="todo-wrap">
 			<div class="todo-prompt">
 				<input type="text" placeholder="Write a to do" class="todo-input">
 				<button type="button" class="todo-add">추가</button>
@@ -30,10 +30,35 @@
 			<ul class="todo-list">
 			</ul>
 		</div>
-  </body>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="todo.js"></script>
-  <script>
-    const todoApp = new Todo( $('#todoApp') );
-  </script>
+		<!-- 
+		<div class="todo-wrap">
+			<div class="todo-prompt">
+				<input type="text" placeholder="Write a to do" class="todo-input">
+				<button type="button" class="todo-add">추가</button>
+			</div>
+			
+			<ul class="todo-list">
+				<li id="1">
+					<input type="checkbox" class="todo-checkbox">
+					<span>입력 받은 텍스트가 들어갑니다.</span>
+					<button type="button" class="todo-delete">삭제</button>
+				</li>
+				<li id="2">
+					<input type="checkbox" class="todo-checkbox">
+					<span>입력 받은 텍스트가 들어갑니다.</span>
+					<button type="button" class="todo-delete">삭제</button>
+				</li>
+				<li id="3">
+					// 체크박스에 체크 시 클래스(.done), checked 노출
+					<input type="checkbox" class="todo-checkbox done" checked>
+					<span>입력 받은 텍스트가 들어갑니다.</span>
+					<button type="button" class="todo-delete">삭제</button>
+				</li>
+			</ul>
+		</div> -->
+		<script src="./todo.js"></script>
+		<script>
+			const myTodo = new Todo('.todo-wrap');
+		</script>
+	</body>
 </html>

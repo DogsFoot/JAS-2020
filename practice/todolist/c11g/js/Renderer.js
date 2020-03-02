@@ -13,6 +13,7 @@ const Renderer = class {
     };
 
     this.addEvents();
+    this.render();
   }
 
   render() {
@@ -21,10 +22,15 @@ const Renderer = class {
       if (this.renderedTaskIDs.has(t.id)) return;
       this.renderedTaskIDs.add(t.id);
       const li = document.importNode(liTemplate.content, true).querySelector('li');
+      const [checkbox, span, button] = li.children;
       li.dataset.id = t.id;
-      li.querySelector('span').textContent = t.title;
-      li.querySelector('input').addEventListener('click', e => this.toggleHandler(e, t));
-      li.querySelector('button').addEventListener('click', _ => this.removeHandler(t));
+      span.textContent = t.title;
+      checkbox.checked = t.done;
+      t.done
+        ? checkbox.classList.add('done')
+        : checkbox.classList.remove('done');
+      checkbox.addEventListener('click', e => this.toggleHandler(e, t));
+      button.addEventListener('click', _ => this.removeHandler(t));
       ul.appendChild(li);
     });
   }
@@ -44,6 +50,7 @@ const Renderer = class {
     if (!title) return alert('제목을 입력해 주세요!');
     const task = new Task(title);
     this.todo.addTask(task);
+    this.todo.save();
     this.render();
     input.value = '';
     input.focus();
@@ -51,6 +58,7 @@ const Renderer = class {
 
   removeHandler(t) {
     this.todo.removeTask(t);
+    this.todo.save();
     this.renderedTaskIDs.delete(t.id);
     document.querySelector(`[data-id='${t.id}']`).remove();
   }
@@ -58,6 +66,7 @@ const Renderer = class {
   toggleHandler(e, t) {
     t.toggle();
     e.target.classList.toggle('done');
+    this.todo.save();
   }
 }
 

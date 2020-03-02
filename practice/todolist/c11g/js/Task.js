@@ -1,7 +1,7 @@
 const Task = class {
-  constructor(title, done = false) {
-    this.id = Date.now();
+  constructor(title, id = Date.now(), done = false) {
     this.title = title;
+    this.id = id;
     this.done = done;
   }
 
