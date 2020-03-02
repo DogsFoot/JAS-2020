@@ -67,6 +67,10 @@
 		</tbody>
   </table>
 <script>
+// https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 const Calculator = {
   status: 0, // 0: initial, 1: input, 2: operator, 3: done
   acc: 0,
@@ -89,7 +93,7 @@ const Calculator = {
 
   display(){
     const {screen,exprScreen} = this.el;
-    screen.textContent = this.input ? `${this.input}` : `${this.acc}`;
+    screen.textContent = this.input ? `${numberWithCommas(this.input)}` : `${numberWithCommas(this.acc)}`;
     exprScreen.textContent = this.expr;
   },
 
@@ -213,7 +217,6 @@ Calculator.init();
 - % 연산
 - 키보드 조작
 - 코드 리팩토링, 파일 분리
-- , 포맷팅 ?
 */
 </script>
 </body>
