@@ -76,13 +76,15 @@ const Calculator = {
   acc: 0,
   input: '',
   expr: '',
+  isPercentage: false,
   lastOperand: 0,
   lastOperator: '',
   el: {
     input: [
       ...document.querySelectorAll('[data-number]'),
       document.querySelector('[data-symbol=dot]'),
-      document.querySelector('[data-symbol=plusMinus]')
+      document.querySelector('[data-symbol=plusMinus]'),
+      document.querySelector('[data-symbol=percent]'),
     ],
     operator: [...document.querySelectorAll('[data-operator]')],
     calculate: document.querySelector('[data-btn=calculate]'),
@@ -119,6 +121,32 @@ const Calculator = {
         this.input = this.input
 					? (parseFloat(this.input) * -1).toString()
 					: this.acc * -1; // 연산 도중에 입력 없이 누르면 현재 누적 값이 입력 값이 됌
+        if(this.status === 3) {
+          this.acc = 0;
+          this.expr = '';
+        }
+        if(this.isPercentage) {
+          let expr = this.expr.trim().split(' ');
+          expr.splice(expr.length-1,1, this.input);
+          this.expr = `${expr.join(' ')} `;
+        }
+      break;
+      case '％':
+        if(this.status === 3) {
+          this.acc = 0;
+          this.expr = '';
+        }
+        if(!this.lastOperator) {
+          this.input = '0';
+          this.expr = '';
+        } else {
+          this.input = this.input ? this.input/100 : this.acc/100;
+          if(this.lastOperator === '+'|| this.lastOperator === '-') {
+            this.input *= this.acc;
+          }
+          this.expr += `${this.input} `;
+          this.isPercentage = true;
+        }
       break;
       default: // 0~9
         if(this.status === 3) {
@@ -139,7 +167,12 @@ const Calculator = {
     switch(this.status) {
       case 0: return; // 연산 기호부터 누른 경우
       case 1:
-        this.expr += `${operand < 0 ? `(${operand})`: operand} ${operator} `;
+        if(this.isPercentage) {
+          this.expr += `${operator} `;
+          this.isPercentage = false;
+        } else {
+          this.expr += `${operand} ${operator} `;
+        }
         this.acc = this.lastOperator ? this.calc(this.lastOperator, operand) : operand;
         this.lastOperand = operand;
       break;
@@ -166,17 +199,23 @@ const Calculator = {
     switch(this.status) {
       case 0: return;
       case 1:
-        this.expr += `${operand < 0 ? `(${operand})`: operand} = `;
+        if(this.isPercentage) {
+          this.expr += `= `;
+          this.isPercentage = false;
+        } else {
+          this.expr += `${operand} = `;
+        }
         this.acc = this.lastOperand ? this.calc(this.lastOperator, operand) : operand;
         this.lastOperand = operand;
       break;
       case 2:
         if(!operand) operand = this.acc;
-        this.expr += `${operand < 0 ? `(${operand})`: operand} = `;
+        this.expr += `${operand} = `;
         this.acc = this.calc(this.lastOperator, operand);
         this.lastOperand = operand;
       break;
-      case 3: 
+      case 3:
+        if(!this.lastOperator) return;
         this.expr = `${this.acc} ${this.lastOperator} ${this.lastOperand} = `;
         this.acc = this.calc(this.lastOperator, this.lastOperand);
       break;
@@ -201,6 +240,7 @@ const Calculator = {
     this.acc = 0;
     this.input = '';
     this.expr = '';
+    this.isPercentage = false;
     this.lastOperand = null;
     this.lastOperator = '';
     this.display();
@@ -214,8 +254,10 @@ const Calculator = {
 Calculator.init();
 
 /* TODO
-- % 연산
 - 키보드 조작
+- 소수점 4자리로 fix
+- = 연산 이후의 인풋 핸들러 수정
+- expr의 음수 값 ( ) 추가
 - 코드 리팩토링, 파일 분리
 */
 </script>
