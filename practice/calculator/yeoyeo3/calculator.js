@@ -9,15 +9,14 @@ class Calculator {
       equalBtn : calculatorEelment.querySelector('[data-btn="calculate"]'),
       //numberBtn : calculatorEelment.querySelectorAll('[data-number]')
     }
+		this.ui = {
+      resultElement : calculatorEelment.querySelector('.result'),
+      expressionElement : calculatorEelment.querySelector('.mathematical-expression'),
+    }
     this.data = {
-      numberInput : true,
-      expression : '',
-      beforeOperator : '',
-      beforeNumber : '',
-      nowNumber : '',
-      result : 0,
     }
     this.init();
+    this.reset();
   }
   init(){
     const {resetBtn, divisionBtn, multiplyBtn, minusBtn, plusBtn, equalBtn} = this.btn;
@@ -42,6 +41,7 @@ class Calculator {
     calculatorEelment.addEventListener('click', (e) => {
       this.number(e);
     });
+
   }
   number(e){
     if(this.data.numberInput) {
@@ -49,49 +49,66 @@ class Calculator {
       if(thisElement.getAttribute('data-number')) {
         let number = thisElement.getAttribute('data-number');
         this.data.nowNumber = this.data.nowNumber + String(number);
+        this.renderNumber();
       }
     }
   }
   operate(){
-    if(this.data.nowNumber){
-      if(this.data.beforeNumber){
-        console.log(this.data.beforeNumber + this.data.expression + this.data.nowNumber);
-      }
+    if(this.data.nowNumber && !this.data.beforeNumber){
+      this.renderExpression();
       this.data.beforeNumber = this.data.nowNumber;
+      this.data.nowNumber = '';
+      this.data.beforeOperator = this.data.beforeNumber + this.data.expression;
+    }
+    if(this.data.nowNumber && this.data.beforeNumber){
+      this.renderExpression();
+      this.data.beforeOperator = this.data.beforeOperator + this.data.nowNumber + this.data.expression;
+      this.data.nowNumber = eval(this.data.beforeOperator + 0);
+      this.renderNumber();
       this.data.nowNumber = '';
     }
   }
+  calc(operator){
+    console.log(operator);
+  }
   reset(){
-    let { numberInput, expression, beforeOperator, beforeNumber, nowNumber, result } = this.data;
-    numberInput = true;
-    expression = '';
-    beforeOperator = '';
-    beforeNumber = 0;
-    nowNumber = '';
-    result = 0;
+    this.data = {
+      numberInput : true,
+      expression : '',
+      beforeOperator : '',
+      beforeNumber : '',
+      nowNumber : '',
+      result : 0,
+    }
+    this.renderExpression();
+    this.renderNumber('reset');
   }
   division(){
-    this.operate();
     this.data.expression = '/';
+    this.operate();
   }
   multiply(){
-    this.operate();
     this.data.expression = '*';
-
+    this.operate();
   }
   minus(){
-    this.operate();
     this.data.expression = '-';
-    
+    this.operate();
   }
   plus(){
-    this.operate();
     this.data.expression = '+';
-    
+    this.operate();
   }
   equal(){
   }
-  render(){
-
+  renderExpression(){
+    this.ui.expressionElement.textContent = this.data.beforeOperator+ this.data.nowNumber + this.data.expression ;
+  }
+  renderNumber(reset){
+    if(reset){
+      this.ui.resultElement.textContent = 0;
+      return
+    }
+    this.ui.resultElement.textContent = this.data.nowNumber;
   }
 }
