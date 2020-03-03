@@ -101,7 +101,7 @@ const Calculator = {
     exprScreen.textContent = this.expr.join(' ');
   },
 
-  compute(operator, v){
+  calc(operator, v){
     switch(operator){
       case '+': return this.acc + v;
       case '-': return this.acc - v;
@@ -130,6 +130,7 @@ const Calculator = {
   },
 
   inputHandler(e){
+    if(Number.isNaN(this.acc)) this.clearHandler();
     const v = e.target.textContent;
     switch(v){
       case '.':
@@ -151,11 +152,12 @@ const Calculator = {
   },
   
   operatorHandler(e){
+    if(Number.isNaN(this.acc)) this.clearHandler();
     const v = this.input ? parseFloat(this.input) : this.acc;
     const operator = e.target.textContent;
     switch(this.status) {
       case 0: return;
-      case 1: this.acc = this.lastOperator ? this.compute(this.lastOperator, v) : v;
+      case 1: this.acc = this.lastOperator ? this.calc(this.lastOperator, v) : v;
     }
     this.lastOperator = operator;
     this.lastOperand = v;
@@ -164,17 +166,17 @@ const Calculator = {
     this.display();
   },
 
-  calcHandler(){
+  equalHandler(){
 		let v = this.input ? parseFloat(this.input) : this.acc;
     switch(this.status) {
       case 0: return;
       case 1:
       case 2:
-        this.acc = this.lastOperator ? this.compute(this.lastOperator, v) : v;
+        this.acc = this.lastOperator ? this.calc(this.lastOperator, v) : v;
       break;
       case 3:
         if(!this.lastOperator) return;
-        this.acc = this.compute(this.lastOperator, this.lastOperand);
+        this.acc = this.calc(this.lastOperator, this.lastOperand);
         v = this.lastOperand;
     }
     this.lastOperand = v;
@@ -187,7 +189,7 @@ const Calculator = {
     const {input,operator,calculate,reset} = this.el;
     input.forEach(button => button.addEventListener('click', e => this.inputHandler(e)));
     operator.forEach(button => button.addEventListener('click', e => this.operatorHandler(e)));
-    calculate.addEventListener('click', () => this.calcHandler());
+    calculate.addEventListener('click', () => this.equalHandler());
     reset.addEventListener('click', () => this.clearHandler());
   },
 
@@ -196,9 +198,9 @@ const Calculator = {
     this.acc = 0;
     this.input = '';
     this.expr = [];
-    this.isPercentage = false;
     this.lastOperand = null;
     this.lastOperator = '';
+    this.isPercentage = false;
     this.display();
   },
 
@@ -210,12 +212,11 @@ const Calculator = {
 Calculator.init();
 
 /* TODO
-- expr의 음수 값 ( ) 추가 및 로직 분리?
-- = 연산 이후의 인풋 핸들러 수정
-- 백분위도 함수 분리
-- 0 / 0 케이스
-- 키보드 조작
 - 소수점 4자리로 fix
+- = 연산 이후의 인풋 핸들러 수정
+- expr의 음수 값 ( ) 추가 및 로직 분리?
+- 백분위도 함수 분리
+- 키보드 조작
 - 코드 리팩토링, 파일 분리
 - 디버깅용 log 함수
 */
