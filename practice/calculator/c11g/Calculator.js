@@ -10,6 +10,7 @@ export const Calculator = {
   expr: [],
   lastOperand: 0,
   lastOperator: '',
+  isPercentage: false,
   el: {
     input: [
       ...document.querySelectorAll('[data-number]'),
