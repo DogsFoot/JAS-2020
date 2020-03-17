@@ -9,39 +9,6 @@ const calculator = {
 		result: document.querySelector('[data-output=result]')
 	},
 
-	init() {
-		const {domElement: {number, operator, dot, calculate, reset}} = this;
-
-		number.forEach(numberButton => {
-			numberButton.addEventListener('click', (e) => {
-				this.numberButtonHandler(e);
-				this.outputResult(this.data.input);
-			});
-		});
-
-		operator.forEach(operatorButton => {
-			operatorButton.addEventListener('click', () => {
-				this.operatorButtonHandler(operatorButton.dataset.operator);
-			});
-		});
-		
-		calculate.addEventListener('click', () => {
-			this.outputExpression('equal');
-			this.calculateButtonHandler(this.data.operator);
-			this.outputResult(this.data.result);
-			console.table(this.data);
-		});
-
-		dot.addEventListener('click', () => {
-			this.addDecimalPoint();
-			this.outputResult(this.data.input);
-		});
-
-		reset.addEventListener('click', () => {
-			this.reset();
-		});
-	},
-
 	data: {
 		operand: '',
 		operator: '',
@@ -52,20 +19,20 @@ const calculator = {
 
 	//숫자버튼 클릭 시 함수
 	numberButtonHandler(e) {
-		const {data: {input, result}} = calculator;
+		const {input, result} = this.data;
 		const target = e.target;
-
-		if (result || result === 0) {
-			calculator.reset();
+		
+		if (result !== '') {
+			this.reset();
 		}
 		
 		if (input[0] === '0') {
 			if (input[1] !== '.') {
-				calculator.data.input = '';	
+				this.data.input = '';	
 			}
 		}
-		calculator.data.input += target.textContent;
-		console.table(calculator.data);
+		this.data.input += target.textContent;
+		// console.table(this.data);
 	},
 
 	//연산버튼 클릭 시 함수
@@ -76,11 +43,11 @@ const calculator = {
 		this.data.operator = inputOperator;
 
 		if (!input) {
-			if (result) {
+			if (result !== '') {
 				this.data.operand = this.data.result;
 			}
 
-			if (!(operand || operand === 0)) {
+			if (operand === '') {
 				this.outputExpression(inputOperator);
 				this.data.operand = Number(this.data.input);
 				return;
@@ -91,13 +58,13 @@ const calculator = {
 			return;
 		}
 
-		if ((operand || operand === 0) || accumulation || accumulation === 0) {
+		if (operand !== '' || accumulation !== '') {
 			this.outputExpression(inputOperator);
 			this.data.accumulation = this.calculateButtonHandler(latestOperator);
 			this.outputResult(this.data.accumulation);
 			this.data.operand = this.data.accumulation;
 			this.data.result = '';
-			console.table(calculator.data);
+			// console.table(calculator.data);
 			return;
 		}
 
@@ -105,7 +72,7 @@ const calculator = {
 		this.outputExpression(inputOperator);
 		this.outputResult(this.data.operand);
 		this.data.input = '';
-		console.table(calculator.data);
+		// console.table(calculator.data);
 	},
 
 	// 계산버튼 클릭 시 함수
@@ -123,21 +90,21 @@ const calculator = {
 			return this.data.result;
 		}
 
-		if (result || result === 0) {
-			console.log('마지막연산 재수행');
+		if (result !== '') {
+			// console.log('마지막연산 재수행');
 			leftValue = this.data.result;
 			rightValue = operand;
 		} else {
 			if (!input) {
-				if(accumulation || accumulation === 0) {
+				if(accumulation !== '') {
 					leftValue = accumulation;
 					rightValue = operand;
-				} else if (operand || operand === 0) {
+				} else if (operand !== '') {
 					leftValue = operand;
 					rightValue = operand;
 				}
 			} else {
-				if(accumulation || accumulation === 0) {
+				if(accumulation !== '') {
 					leftValue = accumulation;
 					rightValue = input;
 				} else {
@@ -174,7 +141,7 @@ const calculator = {
 	addDecimalPoint () {
 		const {input, result} = this.data;
 
-		if (result || result === 0) {
+		if (result !== '') {
 			this.reset();
 		}
 
@@ -188,7 +155,7 @@ const calculator = {
 		}
 
 		this.data.input += '.';
-		console.table(this.data);
+		// console.table(this.data);
 	},
 
 	// 데이터 출력함수
@@ -232,7 +199,7 @@ const calculator = {
 					return;
 				}
 				
-				if (result || result === 0) {
+				if (result !== '') {
 					if (!operator) {
 						return;
 					}
@@ -255,7 +222,7 @@ const calculator = {
 				}
 
 				if (!input) {
-					if (accumulation || accumulation === 0) {
+					if (accumulation !== '') {
 						this.domElement.expression.textContent += accumulation + expressionSymbol;
 						return;
 					}
@@ -268,7 +235,7 @@ const calculator = {
 		}
 
 		if (!input) {
-			if (!(operand || operand === 0)) {
+			if (operand === '') {
 				this.domElement.expression.textContent = Number(operand) + expressionSymbol;
 				return;
 			}
@@ -277,7 +244,7 @@ const calculator = {
 				this.domElement.expression.textContent += expressionSymbol;
 			}
 
-			if (result || result === 0) {
+			if (result !== '') {
 				this.domElement.expression.textContent = result + expressionSymbol;
 			}
 			return;
@@ -295,7 +262,40 @@ const calculator = {
 		this.data.result = '';
 		this.domElement.expression.textContent = '';
 		this.outputResult('0');
-		console.log('reset Completed!');
+		// console.log('reset Completed!');
+	},
+
+	init() {
+		const {number, operator, dot, calculate, reset} = this.domElement;
+
+		number.forEach(numberButton => {
+			numberButton.addEventListener('click', (e) => {
+				this.numberButtonHandler(e);
+				this.outputResult(this.data.input);
+			});
+		});
+
+		operator.forEach(operatorButton => {
+			operatorButton.addEventListener('click', () => {
+				this.operatorButtonHandler(operatorButton.dataset.operator);
+			});
+		});
+		
+		calculate.addEventListener('click', () => {
+			this.outputExpression('equal');
+			this.calculateButtonHandler(this.data.operator);
+			this.outputResult(this.data.result);
+			// console.table(this.data);
+		});
+
+		dot.addEventListener('click', () => {
+			this.addDecimalPoint();
+			this.outputResult(this.data.input);
+		});
+
+		reset.addEventListener('click', () => {
+			this.reset();
+		});
 	}
 }
 
