@@ -17,6 +17,7 @@
         .is-disabled {pointer-events: none; opacity: 0.5;}
 
         .list.cart {border: 1px solid #eee;padding: 10px;}
+        .list.cart .btn-delete {background-color: transparent;border: none;}
 
         .list.order>li{border: 1px solid #eee;padding: 10px;}
         .list.order .text-date {display: block; margin-bottom: 5px; font-size: 12px; color: #333;}
@@ -25,6 +26,7 @@
         .order-item { padding-left: 10px; }
         .order-item>li {margin-top: 5px;}
         .btn-area {margin-top: 10px; text-align: right;}
+        button { cursor: pointer;}
 	</style>
 </head>
 <body>
@@ -280,11 +282,11 @@
             </ul>
             <h3>발주신청</h3>
             <ul class="list cart">
-                <li>우유 <span>3</span></li>
-                <li>과일 <span>1</span></li>
+                <li>우유 <span>3</span><button type="button" class="btn-delete">x</button></li>
+                <li>과일 <span>1</span><button type="button" class="btn-delete">x</button></li>
             </ul>
             <div class="btn-area">
-                <button class="btn waves-effect waves-light" type="submit" name="action">Submit<i class="material-icons right">주문하기</i></button>
+                <button type="submit" class="btn-submit">주문하기</button>
             </div>
             <h3>지난 주문</h3>
             <ul class="list order">
@@ -294,6 +296,20 @@
                         <li>우유 <span>3</span></li>
                         <li>과일 <span>1</span></li>
                     </ul>
+                    <div class="btn-area">
+                        <button type="button" class="btn-cancel">취소</button>
+                    </div>
+                    <div class="status">발주 중</div>
+                </li>
+                <li>
+                    <span class="text-date">Sun Mar 22 2020 20:23:21</span>
+                    <ul class="order-item">
+                        <li>우유 <span>3</span></li>
+                        <li>과일 <span>1</span></li>
+                    </ul>
+                    <div class="btn-area">
+                        <button type="button" class="btn-cancel" disabled>취소</button>
+                    </div>
                     <div class="status">발주 완료</div>
                 </li>
             </ul>
