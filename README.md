@@ -17,6 +17,7 @@
 * [modifyDOM](./practice/modifyDOM)
 * [todolist](./practice/todolist)
 * [calculator](./practice/calculator)
+* [orderingSystem](./practice/orderingSystem)
 * [StudentManager](./practice/StudentManager)
 
 ### 프로젝트 관리
