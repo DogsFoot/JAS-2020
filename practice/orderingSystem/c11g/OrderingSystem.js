@@ -1,19 +1,11 @@
-class Product {
-  constructor(id,name,stock){
-    this.id = id;
-    this.name = name;
-    this.stock = stock;
-  }
-
-  setStock(count){
-    this.stock = count;
-  }
-}
+import Product from './Product.js';
 
 class OrderingSystem {
   constructor(inventory){
     this.products = this.getProducts(inventory);
-    this.render(inventory);
+    this.cart = {};
+
+    this.renderProducts(inventory);
     this.addEvents();
   }
 
@@ -21,37 +13,9 @@ class OrderingSystem {
     return inventory.map(({id, name, stock}) => new Product(id,name,stock));
   }
 
-  render(inventory){
-    document.querySelector('.shop .list').innerHTML = inventory.reduce((acc, {id,name,stock,imgUrl}) => {
-      return `${acc}
-      <li class="list-item" data-id="${id}">
-        <label>
-          <span>${name}</span>
-        </label>
-        <span class="thum"><img src="${imgUrl}" alt="${name}"></span>
-        <input type="number" value="${stock}" class="spinner">
-      </li>`
-    }, '');
-    document.querySelector('.customer .list').innerHTML = inventory.reduce((acc, {id,name,imgUrl}) => {
-      return `${acc}
-      <li class="list-item" data-id="${id}">
-        <label for="for-chklist-${id}">
-        <input type="checkbox" name="order-product" id="for-chklist-${id}">
-          <span>${name}</span>
-        </label>
-        <span class="thum"><img src="${imgUrl}" alt="${name}"></span>
-        <input type="number" value="0" class="spinner">
-      </li>`
-    }, '');
-  }
-
-  addEvents(){
-    [...document.querySelectorAll('.shop .spinner')].forEach(spinner => {
-      spinner.addEventListener('change', e => this.shopSpinnerHandler(e));
-    });
-    [...document.querySelectorAll('.customer .spinner')].forEach(spinner => {
-      spinner.addEventListener('change', e => this.customerSpinnerHandler(e));
-    });
+  updateCart(product, count){
+    this.cart[product.name] = count;
+    console.log('this.cart', this.cart);
   }
 
   shopSpinnerHandler(e){
@@ -79,6 +43,40 @@ class OrderingSystem {
       return alert(`재고가 부족합니다. (최대 주문가능 수량: ${product.stock}개)`);
     }
     // 발주 신청 과정
+    this.updateCart(product, count);
+  }
+  
+  addEvents(){
+    [...document.querySelectorAll('.shop .spinner')].forEach(spinner => {
+      spinner.addEventListener('change', e => this.shopSpinnerHandler(e));
+    });
+    [...document.querySelectorAll('.customer .spinner')].forEach(spinner => {
+      spinner.addEventListener('change', e => this.customerSpinnerHandler(e));
+    });
+  }
+
+  renderProducts(inventory){
+    document.querySelector('.shop .list').innerHTML = inventory.reduce((acc, {id,name,stock,imgUrl}) => {
+      return `${acc}
+      <li class="list-item" data-id="${id}">
+        <label>
+          <span>${name}</span>
+        </label>
+        <span class="thum"><img src="${imgUrl}" alt="${name}"></span>
+        <input type="number" value="${stock}" class="spinner">
+      </li>`
+    }, '');
+    document.querySelector('.customer .list').innerHTML = inventory.reduce((acc, {id,name,imgUrl}) => {
+      return `${acc}
+      <li class="list-item" data-id="${id}">
+        <label for="for-chklist-${id}">
+        <input type="checkbox" name="order-product" id="for-chklist-${id}">
+          <span>${name}</span>
+        </label>
+        <span class="thum"><img src="${imgUrl}" alt="${name}"></span>
+        <input type="number" value="0" class="spinner">
+      </li>`
+    }, '');
   }
 }
 
