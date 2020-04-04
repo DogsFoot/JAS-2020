@@ -21,8 +21,10 @@ class OrderingSystem {
   deleteHandler(e){
     const target = e.target;
     if (target.nodeName !== 'BUTTON') return;
-    delete this.cart[target.dataset.id];
+    const product_id = target.dataset.id
+    delete this.cart[product_id];
     this.renderCart();
+    document.querySelector(`.customer [data-id=${product_id}] .spinner`).value = 0;
   }
 
   shopSpinnerHandler(e){
@@ -49,7 +51,6 @@ class OrderingSystem {
       spinner.value = product.stock;
       return alert(`재고가 부족합니다. (최대 주문가능 수량: ${product.stock}개)`);
     }
-    // 발주 신청 과정
     this.updateCart(product, count);
     this.renderCart();
   }
@@ -106,7 +107,7 @@ export default OrderingSystem;
 // [v] 아이템의 재고수량 조절시, 도매사의 재고보다 많은 수량을 입력하면, 얼럿노출되며 수량이 올라가지 않습니다.
 //   [v] "재고가 부족합니다 (최대 주문가능 수량: N개)"
 // [v] 수량을 1이라도 올리면, 바로바로 "소매 발주신청"란에 추가됩니다
-// [ ] "소매 발주신청"란에서 반대로 아이템을 제거할 수 있습니다
+// [v] "소매 발주신청"란에서 반대로 아이템을 제거할 수 있습니다
 // [ ] 주문하기를 누르는 순간의 시간으로 "소매 발주 신청"이 텅 비게 되며, 히스토리로 옮겨집니다 `상태 : 발주 신청`
 // [ ] 신청한 발주를 도매사가 처리 결정전, 취소 할 수 있습니다
 // [ ] 도매사가 수락하면 취소할 수 없습니다
