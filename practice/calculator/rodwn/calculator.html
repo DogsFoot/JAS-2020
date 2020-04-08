@@ -4,8 +4,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Calculator</title>
 	<style>
-		table {width: 361px;height: 581px;border: 1px solid;text-align: center;border-collapse: collapse;background-color: #e1e1e1;font-weight: 700;font-size: 25px;table-layout: fixed;}
-		.mathematical-expression {height: 40px;font-size: 16px}
+		table {width: 361px;height: 581px;border: 1px solid;text-align: center;border-collapse: collapse;background-color: #e1e1e1;font-weight: 700;font-size: 25px;table-layout: fixed;margin: 150px auto;}
+		.mathematical-expression {height: 52px;font-size: 16px;padding-left: 110px;background: url(../img/img.png) no-repeat 4%;}
 		.result {height: 90px;font-size: 50px;}
 		table td {border: 1px solid #a9a9a9; border-width: 0 0 1px 1px;padding: 0}
 		button {display: block;width:100%;height: 100%;border: 0; background: 0;font-weight: inherit;color: inherit;font-size:inherit;padding: 0;}
@@ -13,9 +13,8 @@
 		tbody tr:first-child {background-color: #d4d4d4;}
 		tbody td[colspan] button {text-align: left; padding-left: 37px;}
 		thead {background-color: #4b4b4b;text-align: right;}
-		thead td {padding-right: 30px;color: #fff;}
+		thead td {padding: 15px 30px 15px 0;color: #fff;word-break: break-all;}
 		thead tr:first-child td{border-bottom: 0;}
-		.mathematical-expression {background: url(../img/img.png) no-repeat 4%;}
 	</style>
 </head>
 <body>
@@ -28,7 +27,7 @@
 		</colgroup>
 		<thead>
 			<tr>
-				<td class="mathematical-expression" colspan="4" data-output="expression">10 + 3 =</td>
+				<td class="mathematical-expression" colspan="4" data-output="expression"></td>
 			</tr>
 			<tr>
 				<td class="result" colspan="4" data-output="result">0</td>
@@ -42,21 +41,21 @@
 				<td><button type="button" data-operator="division">÷</button></td>
 			</tr>
 			<tr>
-				<td><button type="button" data-number="7">7</button></td>
-				<td><button type="button" data-number="8">8</button></td>
-				<td><button type="button" data-number="9">9</button></td>
+				<td><button type="button" data-number="seven">7</button></td>
+				<td><button type="button" data-number="eight">8</button></td>
+				<td><button type="button" data-number="nine">9</button></td>
 				<td><button type="button" data-operator="times">×</button></td>
 			</tr>
 			<tr>
-				<td><button type="button" data-number="4">4</button></td>
-				<td><button type="button" data-number="5">5</button></td>
-				<td><button type="button" data-number="6">6</button></td>
+				<td><button type="button" data-number="four">4</button></td>
+				<td><button type="button" data-number="five">5</button></td>
+				<td><button type="button" data-number="six">6</button></td>
 				<td><button type="button" data-operator="minus">-</button></td>
 			</tr>
 			<tr>
-				<td><button type="button" data-number="1">1</button></td>
-				<td><button type="button" data-number="2">2</button></td>
-				<td><button type="button" data-number="3">3</button></td>
+				<td><button type="button" data-number="one">1</button></td>
+				<td><button type="button" data-number="two">2</button></td>
+				<td><button type="button" data-number="three">3</button></td>
 				<td><button type="button" data-operator="plus">+</button></td>
 			</tr>
 			<tr>
@@ -66,5 +65,6 @@
 			</tr>
 		</tbody>
 	</table>
+	<script src="calculator.js"></script>
 </body>
 </html>
