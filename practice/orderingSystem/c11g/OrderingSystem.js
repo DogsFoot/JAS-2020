@@ -4,13 +4,18 @@ class OrderingSystem {
   constructor(inventory){
     this.products = this.getProducts(inventory);
     this.cart = {};
+    this.el = {
+      shopProdcuts: document.querySelector('.shop .product'),
+      customerProdcuts: document.querySelector('.customer .product'),
+      cart: document.querySelector('.cart'),
+    };
 
     this.renderProducts(inventory);
     this.addEvents();
   }
 
   getProducts(inventory){
-    return inventory.map(({id, name, stock}) => new Product(id,name,stock));
+    return inventory.map(({id, name, stock, imgUrl}) => new Product(id, name, stock, imgUrl));
   }
 
   updateCart(product, count){
@@ -37,6 +42,7 @@ class OrderingSystem {
     const product_id = spinner.parentElement.dataset.id;
     const product = this.products.find(({id}) => id === product_id);
     product.setStock(stock);
+    this.renderCustomerProducts();
   }
 
   customerSpinnerHandler(e){
@@ -56,24 +62,25 @@ class OrderingSystem {
   }
   
   addEvents(){
-    [...document.querySelectorAll('.shop .spinner')].forEach(spinner => {
-      spinner.addEventListener('change', e => this.shopSpinnerHandler(e));
-    });
-    [...document.querySelectorAll('.customer .spinner')].forEach(spinner => {
-      spinner.addEventListener('change', e => this.customerSpinnerHandler(e));
-    });
-    document.querySelector('.cart').addEventListener('click', e => this.deleteHandler(e));
+    const {shopProdcuts,customerProdcuts} = this.el;
+    shopProdcuts.addEventListener('change', e => this.shopSpinnerHandler(e));
+    customerProdcuts.addEventListener('change', e => this.customerSpinnerHandler(e));
+    this.el.cart.addEventListener('click', e => this.deleteHandler(e));
   }
 
   renderCart(){
-    const cart = document.querySelector('.cart');
-    cart.innerHTML = Object.entries(this.cart)
+    this.el.cart.innerHTML = Object.entries(this.cart)
       .reduce((acc, product) => `${acc}<li>${product[1][0]} <span>${product[1][1]}</span><button type="button" class="btn-delete" data-id="${product[0]}">x</button></li>`
     , '');
   }
 
   renderProducts(inventory){
-    document.querySelector('.shop .list').innerHTML = inventory.reduce((acc, {id,name,stock,imgUrl}) => {
+    this.renderShopProducts(inventory);
+    this.renderCustomerProducts();
+  }
+
+  renderShopProducts(inventory){
+    this.el.shopProdcuts.innerHTML = inventory.reduce((acc, {id,name,stock,imgUrl}) => {
       return `${acc}
       <li class="list-item" data-id="${id}">
         <label>
@@ -83,9 +90,12 @@ class OrderingSystem {
         <input type="number" value="${stock}" class="spinner">
       </li>`
     }, '');
-    document.querySelector('.customer .list').innerHTML = inventory.reduce((acc, {id,name,imgUrl}) => {
+  }
+  
+  renderCustomerProducts(){
+    this.el.customerProdcuts.innerHTML = this.products.reduce((acc, {id,name,stock,imgUrl}) => {
       return `${acc}
-      <li class="list-item" data-id="${id}">
+      <li class="list-item ${stock < 1 ? 'is-disabled' : ''}" data-id="${id}">
         <label for="for-chklist-${id}">
         <input type="checkbox" name="order-product" id="for-chklist-${id}">
           <span>${name}</span>
@@ -111,11 +121,11 @@ export default OrderingSystem;
 // [ ] 주문하기를 누르는 순간의 시간으로 "소매 발주 신청"이 텅 비게 되며, 히스토리로 옮겨집니다 `상태 : 발주 신청`
 // [ ] 신청한 발주를 도매사가 처리 결정전, 취소 할 수 있습니다
 // [ ] 도매사가 수락하면 취소할 수 없습니다
-// [ ] is-disabled 재고가 없으면
+// [v] is-disabled 재고가 없으면
 
 // ## 도매사 스펙 정의
 // [v] 수시로 재고수량을 조절 할 수 있습니다.
-// [ ] 소매에서 발주 신청시, 다음 소매주문에서 `주문가능 수량`에서 차감됩니다
+// [v] 소매에서 발주 신청시, 다음 소매주문에서 `주문가능 수량`에서 차감됩니다
 // [ ] 주문란
 //   [ ] 수락이나 불가를 누르면 주문란 제거
 //   [ ] 주문란은 리스트형태로 쌓일 수 있습니다
