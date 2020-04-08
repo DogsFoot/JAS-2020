@@ -4,10 +4,16 @@ class OrderingSystem {
   constructor(inventory){
     this.products = this.getProducts(inventory);
     this.cart = {};
+    this.shopOrderList = [];
+    this.customerOrderList = [];
+    
     this.el = {
       shopProdcuts: document.querySelector('.shop .product'),
       customerProdcuts: document.querySelector('.customer .product'),
       cart: document.querySelector('.cart'),
+      orderButton: document.querySelector('.btn-submit'),
+      shopOrder: document.querySelector('.shop .order'),
+      customerOrder: document.querySelector('.customer .order'),
     };
 
     this.renderProducts(inventory);
@@ -23,13 +29,13 @@ class OrderingSystem {
     if(count < 1) delete this.cart[product.id];
   }
 
-  deleteHandler(e){
-    const target = e.target;
-    if (target.nodeName !== 'BUTTON') return;
-    const product_id = target.dataset.id
-    delete this.cart[product_id];
-    this.renderCart();
-    document.querySelector(`.customer [data-id=${product_id}] .spinner`).value = 0;
+  // Event & Handler
+  addEvents(){
+    const {shopProdcuts,customerProdcuts,cart,orderButton} = this.el;
+    shopProdcuts.addEventListener('change', e => this.shopSpinnerHandler(e));
+    customerProdcuts.addEventListener('change', e => this.customerSpinnerHandler(e));
+    cart.addEventListener('click', e => this.deleteHandler(e));
+    orderButton.addEventListener('click', _ => this.orderHandler());
   }
 
   shopSpinnerHandler(e){
@@ -61,13 +67,44 @@ class OrderingSystem {
     this.renderCart();
   }
   
-  addEvents(){
-    const {shopProdcuts,customerProdcuts} = this.el;
-    shopProdcuts.addEventListener('change', e => this.shopSpinnerHandler(e));
-    customerProdcuts.addEventListener('change', e => this.customerSpinnerHandler(e));
-    this.el.cart.addEventListener('click', e => this.deleteHandler(e));
+  deleteHandler(e){
+    const target = e.target;
+    if (target.nodeName !== 'BUTTON') return;
+    const product_id = target.dataset.id
+    delete this.cart[product_id];
+    this.renderCart();
+    document.querySelector(`.customer [data-id=${product_id}] .spinner`).value = 0;
   }
 
+  orderHandler(){
+    if (Object.keys(this.cart).length === 0) return;
+    const order = {
+      date: Date.now(),
+      products: Object.values(this.cart),
+      isDone: false,
+    }
+    this.shopOrderList.push(order);
+    this.customerOrderList.push(order);
+    this.renderShopOrder();
+    this.renderCustomerOrder();
+    this.cart = {};
+    this.renderCart();
+    this.renderCustomerProducts();
+  }
+
+  // Render
+  renderCustomerOrder(){
+    this.el.customerOrder.innerHTML = this.customerOrderList.reduce((acc, {date,products,isDone}) => `${acc}<li><span class="text-date">${date}</span><ul class="order-item">${
+      products.map(p => `<li>${p[0]} <span>${p[1]}</span></li>`).join(' ')
+    }</ul><div class="btn-area"><button type="button" class="btn-cancel" ${isDone?'disabled':''}>취소</button></div><div class="status">${isDone?'발주 완료':'발주 중'}</div></li>`,'');
+  }
+
+  renderShopOrder(){
+    this.el.shopOrder.innerHTML = this.shopOrderList.reduce((acc, {date,products}) => `${acc}<li><span class="text-date">${date}</span><ul class="order-item">${
+      products.map(p => `<li>${p[0]} <span>${p[1]}</span></li>`).join(' ')
+    }</ul><div class="btn-area"><button type="button" class="btn-confirm">수락</button><button type="button" class="btn-reject">불가</button></div></li>`,'');
+  }
+  
   renderCart(){
     this.el.cart.innerHTML = Object.entries(this.cart)
       .reduce((acc, product) => `${acc}<li>${product[1][0]} <span>${product[1][1]}</span><button type="button" class="btn-delete" data-id="${product[0]}">x</button></li>`
@@ -118,7 +155,7 @@ export default OrderingSystem;
 //   [v] "재고가 부족합니다 (최대 주문가능 수량: N개)"
 // [v] 수량을 1이라도 올리면, 바로바로 "소매 발주신청"란에 추가됩니다
 // [v] "소매 발주신청"란에서 반대로 아이템을 제거할 수 있습니다
-// [ ] 주문하기를 누르는 순간의 시간으로 "소매 발주 신청"이 텅 비게 되며, 히스토리로 옮겨집니다 `상태 : 발주 신청`
+// [v] 주문하기를 누르는 순간의 시간으로 "소매 발주 신청"이 텅 비게 되며, 히스토리로 옮겨집니다 `상태 : 발주 신청`
 // [ ] 신청한 발주를 도매사가 처리 결정전, 취소 할 수 있습니다
 // [ ] 도매사가 수락하면 취소할 수 없습니다
 // [v] is-disabled 재고가 없으면
