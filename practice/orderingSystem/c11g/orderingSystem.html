@@ -27,6 +27,7 @@
 	</style>
 </head>
 <body>
+<button id="test">Log Products</button>
 <div class="wrap">
 	<div class="shop">
 		<h1>도매</h1>
@@ -49,21 +50,21 @@
 <script type="module">
 import OrderingSystem from './OrderingSystem.js';
 const INVENTORY = [
-  { id: 'milk', name: '우유', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/01.jpg' },
-  { id: 'ramen', name: '라면', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/02.jpg' },
-  { id: 'water', name: '생수', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/03.jpg' },
-  { id: 'coffee', name: '커피', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/04.jpg' },
-  { id: 'rice', name: '쌀', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/05.jpg' },
-  { id: 'cereals', name: '잡곡', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/06.jpg' },
-  { id: 'fruit', name: '과일', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/speedicon_fruits1.jpg' },
-  { id: 'egg', name: '계란', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/08.jpg' },
-  { id: 'kimchi', name: '김치', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/09.jpg' },
-  { id: 'tofu', name: '두부|콩나물', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/10.jpg' },
-  { id: 'fishcake', name: '어묵|맛살', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/11.jpg' },
-  { id: 'ham', name: '햄|소시지', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/12.jpg' },
-  { id: 'chicken', name: '닭고기', stock: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/13.jpg' },
-  { id: 'pork', name: '돼지고기', stock:  10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/14.jpg' },
-  { id: 'beef', name: '소고기', stock:  10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/15.jpg' },
+  { id: 'milk', name: '우유', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/01.jpg' },
+  { id: 'ramen', name: '라면', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/02.jpg' },
+  { id: 'water', name: '생수', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/03.jpg' },
+  { id: 'coffee', name: '커피', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/04.jpg' },
+  { id: 'rice', name: '쌀', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/05.jpg' },
+  { id: 'cereals', name: '잡곡', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/06.jpg' },
+  { id: 'fruit', name: '과일', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/speedicon_fruits1.jpg' },
+  { id: 'egg', name: '계란', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/08.jpg' },
+  { id: 'kimchi', name: '김치', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/09.jpg' },
+  { id: 'tofu', name: '두부|콩나물', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/10.jpg' },
+  { id: 'fishcake', name: '어묵|맛살', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/11.jpg' },
+  { id: 'ham', name: '햄|소시지', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/12.jpg' },
+  { id: 'chicken', name: '닭고기', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/13.jpg' },
+  { id: 'pork', name: '돼지고기', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/14.jpg' },
+  { id: 'beef', name: '소고기', stock: 10, available: 10, imgUrl: 'https://image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/15.jpg' },
 ];
 new OrderingSystem(INVENTORY);
 </script>
