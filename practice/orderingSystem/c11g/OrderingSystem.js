@@ -7,7 +7,6 @@ class OrderingSystem {
     this.shopOrderList = [];
     this.customerOrderList = [];
     this.statusMsg = ['발주 신청','발주 완료','발주 불가'];
-    document.querySelector('#test').addEventListener('click', _ => console.log(this.products)); // TEST
     
     this.el = {
       shopProdcuts: document.querySelector('.shop .product'),
@@ -33,6 +32,21 @@ class OrderingSystem {
     if(count < 1) delete this.cart[product.id];
   }
 
+  findProductById(product_id){
+    return this.products.find(({id}) => id === product_id);
+  }
+
+  restoreAvailableByOrder(order){
+    order.products.forEach(product => {
+      const p = this.products.find(p => p.id === product[0]);
+      p.setAvailable(p.available+product[1][1]);
+    });
+  }
+
+  findOrderById(id){
+    return this.customerOrderList.find(order => order.date === parseInt(id));
+  }
+
   // Event & Handler
   addEvents(){
     const {shopProdcuts,customerProdcuts,cart,placeOrder,shopOrder,customerOrder} = this.el;
@@ -47,24 +61,21 @@ class OrderingSystem {
   shopSpinnerHandler(e){
     const spinner = e.target;
     const count = parseInt(spinner.value);
+    const product = this.findProductById(spinner.parentElement.dataset.id);
     if(count < 0) {
       spinner.value = 0;
       return alert('재고를 0개 이상으로 설정해주세요.');
     }
-    const product_id = spinner.parentElement.dataset.id;
-    const product = this.products.find(({id}) => id === product_id);
     const diff = count - product.stock;
-    const available = product.available;
     product.setStock(count);
-    product.setAvailable(available+diff);
+    product.setAvailable(product.available+diff);
     this.renderCustomerProducts();
   }
 
   customerSpinnerHandler(e){
     const spinner = e.target;
     const count = parseInt(spinner.value);
-    const product_id = spinner.parentElement.dataset.id;
-    const product = this.products.find(({id}) => id === product_id);
+    const product = this.findProductById(spinner.parentElement.dataset.id);
     if(count < 0) {
       spinner.value = 0;
       return alert('주문 수량은 0개 이상으로 설정해주세요.');
@@ -108,13 +119,10 @@ class OrderingSystem {
   cancelOrderHandler(e){
     const target = e.target;
     if (target.nodeName !== 'BUTTON') return;
-    const currentOrder = this.customerOrderList.find(order => order.date === parseInt(target.dataset.id));
+    const currentOrder = this.findOrderById(target.dataset.id);
     this.customerOrderList = this.customerOrderList.filter(order => order !== currentOrder);
     this.shopOrderList = this.shopOrderList.filter(order => order !== currentOrder);
-    currentOrder.products.forEach(product => {
-      const p = this.products.find(p => p.id === product[0]);
-      p.setAvailable(p.available+product[1][1]);
-    });
+    this.restoreAvailableByOrder(currentOrder);
     this.renderShopOrder();
     this.renderCustomerOrder();
   }
@@ -123,7 +131,7 @@ class OrderingSystem {
     const target = e.target;
     if (target.nodeName !== 'BUTTON') return;
     const role = target.dataset.role;
-    const currentOrder = this.customerOrderList.find(order => order.date === parseInt(target.dataset.id));
+    const currentOrder = this.findOrderById(target.dataset.id);
     switch(role){
       case 'confirm':
         currentOrder.status = 1;
@@ -135,10 +143,7 @@ class OrderingSystem {
       break;
       case 'reject':
         currentOrder.status = 2;
-        currentOrder.products.forEach(product => {
-          const p = this.products.find(p => p.id === product[0]);
-          p.setAvailable(p.available+product[1][1]);
-        });
+        this.restoreAvailableByOrder(currentOrder);
       break;
       default: return;
     }
@@ -197,35 +202,3 @@ class OrderingSystem {
 }
 
 export default OrderingSystem;
-
-// ## 발주 시스템
-// 소매사가 도매사에게 발주주문을 하는 간단 발주 시스템 입니다
-// 재고의 개념과, 주문가능 수량과의 개념이 다릅니다.
-
-// ## 소매사 스펙 정의
-// [v] 아이템의 재고수량 조절시, 도매사의 재고보다 많은 수량을 입력하면, 얼럿노출되며 수량이 올라가지 않습니다.
-//   [v] "재고가 부족합니다 (최대 주문가능 수량: N개)"
-// [v] 수량을 1이라도 올리면, 바로바로 "소매 발주신청"란에 추가됩니다
-// [v] "소매 발주신청"란에서 반대로 아이템을 제거할 수 있습니다
-// [v] 주문하기를 누르는 순간의 시간으로 "소매 발주 신청"이 텅 비게 되며, 히스토리로 옮겨집니다 `상태 : 발주 신청`
-// [v] 신청한 발주를 도매사가 처리 결정전, 취소 할 수 있습니다
-// [v] 도매사가 수락하면 취소할 수 없습니다
-// [v] is-disabled 재고가 없으면
-
-// ## 도매사 스펙 정의
-// [v] 수시로 재고수량을 조절 할 수 있습니다.
-// [v] 소매에서 발주 신청시, 다음 소매주문에서 `주문가능 수량`에서 차감됩니다
-// [v] 주문란
-//   [v] 수락이나 불가를 누르면 주문란 제거
-//   [v] 주문란은 리스트형태로 쌓일 수 있습니다
-// [v] 주문의 수락을 눌르면
-//   [v] `재고`수량 변경
-//   [v] 도매사에서 수락을 하면 히스토리의 상태변경 `상태 : 발주 완료`
-// [v] 주문의 불가를 누르면
-//   [v] `주문가능 수량` 변경
-//   [v] 도매사에서 불가을 하면 히스토리의 상태변경 `상태 : 발주 불가`
-
-// TODO
-// [ ] 코드 중복 부분 함수로 빼기 
-// [ ] 기능 테스트
-// [ ] 디버깅용 테스트 코드 삭제
