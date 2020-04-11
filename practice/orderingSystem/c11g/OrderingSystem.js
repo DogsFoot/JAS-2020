@@ -47,6 +47,11 @@ class OrderingSystem {
     return this.customerOrderList.find(order => order.date === parseInt(id));
   }
 
+  dateFormatter(time){
+    const date = new Date(time);
+    return date.toString().split(' ').slice(0, 5).join(' ')
+  }
+
   // Event & Handler
   addEvents(){
     const {shopProdcuts,customerProdcuts,cart,placeOrder,shopOrder,customerOrder} = this.el;
@@ -154,13 +159,13 @@ class OrderingSystem {
 
   // Render
   renderCustomerOrder(){
-    this.el.customerOrder.innerHTML = this.customerOrderList.reduce((acc, {date,products,status}) => `${acc}<li><span class="text-date">${date}</span><ul class="order-item">${
+    this.el.customerOrder.innerHTML = this.customerOrderList.reduce((acc, {date,products,status}) => `${acc}<li><span class="text-date">${this.dateFormatter(date)}</span><ul class="order-item">${
       products.map(p => `<li>${p[1][0]} <span>${p[1][1]}</span></li>`).join(' ')
     }</ul><div class="btn-area"><button type="button" class="btn-cancel" ${status !== 0?'disabled':''} data-id="${date}">취소</button></div><div class="status">${this.statusMsg[status]}</div></li>`,'');
   }
 
   renderShopOrder(){
-    this.el.shopOrder.innerHTML = this.shopOrderList.reduce((acc, {date,products}) => `${acc}<li><span class="text-date">${date}</span><ul class="order-item">${
+    this.el.shopOrder.innerHTML = this.shopOrderList.reduce((acc, {date,products}) => `${acc}<li><span class="text-date">${this.dateFormatter(date)}</span><ul class="order-item">${
       products.map(p => `<li>${p[1][0]} <span>${p[1][1]}</span></li>`).join(' ')
     }</ul><div class="btn-area"><button type="button" class="btn-confirm" data-role="confirm" data-id="${date}">수락</button><button type="button" class="btn-reject" data-role="reject" data-id="${date}">불가</button></div></li>`,'');
   }
