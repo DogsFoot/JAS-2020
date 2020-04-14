@@ -1,0 +1,62 @@
+[
+	{
+		"item": "우유",
+		"stockQuantity": 10
+	},
+	{
+		"item": "라면",
+		"stockQuantity": 20
+	},
+	{
+		"item": "생수",
+		"stockQuantity": 30
+	},
+	{
+		"item": "커피",
+		"stockQuantity": 40
+	},
+	{
+		"item": "쌀",
+		"stockQuantity": 50
+	},
+	{
+		"item": "잡곡",
+		"stockQuantity": 60
+	},
+	{
+		"item": "과일",
+		"stockQuantity": 70
+	},
+	{
+		"item": "계란",
+		"stockQuantity": 80
+	},
+	{
+		"item": "김치",
+		"stockQuantity": 90
+	},
+	{
+		"item": "두부|콩나물",
+		"stockQuantity": 10
+	},
+	{
+		"item": "어묵|맛살",
+		"stockQuantity": 20
+	},
+	{
+		"item": "햄|소시지",
+		"stockQuantity": 30
+	},
+	{
+		"item": "닭고기",
+		"stockQuantity": 40
+	},
+	{
+		"item": "돼지고기",
+		"stockQuantity": 50
+	},
+	{
+		"item": "소고기",
+		"stockQuantity": 60
+	}
+]
