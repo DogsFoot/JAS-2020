@@ -1,5 +1,7 @@
 (function() {
 	const DOM = {
+		domae: document.querySelector('.shop'),
+		somae: document.querySelector('.customer'),
 		domaeList: document.querySelector('.shop .list.product'),
 		somaeList: document.querySelector('.customer .list.product'),
 		cart: document.querySelector('.list.cart'),
@@ -8,19 +10,18 @@
 		spinner: document.querySelectorAll('.spinner'),
 		submit: document.querySelector('.btn-submit')
 	};
-	let orderIndex = 1;
 	const request = new XMLHttpRequest();
 	request.open('GET', './stock.json');
 	request.responseType = 'json';
 	request.send();
 	request.onload = function () {
-		const {domaeList, somaeList, cart, domaeHistory, somaeHistory, spinner, submit} = DOM;
+		const {domae, somae, domaeList, somaeList, cart, somaeHistory, spinner, submit} = DOM;
 		const domaeData = request.response;
 		const somaeData = {
 			cart: {},
 			history: []
 		};
-		
+
 		// 최초 재고를 화면에 출력
 		function displayStock () {
 			domaeList.querySelectorAll('li').forEach((element, index) => {
@@ -38,7 +39,7 @@
 			if (hour - 12 > 0) {
 				AMPM = '오후';
 				hour -= 12;
-			} else if (getHour === 0) {
+			} else if (hour === 0) {
 				AMPM = '오후';
 			} else {
 				AMPM = '오전';
@@ -47,55 +48,16 @@
 			return `${this.getFullYear()}년 ${this.getMonth() + 1}월 ${this.getDate()}일 (${day[this.getDay()]}) ${AMPM} ${hour}시 ${this.getMinutes()}분 ${this.getSeconds()}초`;
 		};
 
-		// 재고 파악
+		function isNegativeValue (targetSpinner) {
+			if (targetSpinner.valueAsNumber < 0) {
+				targetSpinner.valueAsNumber = 0;
+				alert('수량은 0개 이하일 수 없습니다.');
 
-		// 수량 음수로 설정 불가
-		spinner.forEach(element => {
-			element.addEventListener('change', () => {
-				if (element.valueAsNumber < 0) {
-					element.valueAsNumber = 0;
-					alert('수량은 0개 이하일 수 없습니다.');
-				}
-			});
-		});
-
-		// 소매 수량 변화
-		somaeList.addEventListener('change', (e) => {
-			const target = e.target;
-			let targetItem, targetQuantity;
-			let orderableQuantity;
-
-			if (target.type !== 'number') {
-				return;
+				return true;
 			}
-			
-			targetItem = target.previousElementSibling.previousElementSibling.querySelector('span').textContent;
-			targetQuantity = target.valueAsNumber;
-			
-			domaeData.some(element => {
-				if (element.item === targetItem) {
-					if (element.hasOwnProperty('orderableQuantity')) {
-						orderableQuantity = element.orderableQuantity;
-					} else {
-						orderableQuantity = element.stockQuantity;
-					}
-					
-					return true;
-				}
-			});
-			
-			if (targetQuantity > orderableQuantity) {
-				target.valueAsNumber = orderableQuantity;
-				targetQuantity = orderableQuantity;
-				alert(`재고가 부족합니다 (최대 주문가능 수량: ${orderableQuantity}개)`);
-			}
+		}
 
-			if (targetQuantity <= 0) {
-				delete somaeData.cart[targetItem];
-			} else {
-				somaeData.cart[targetItem] = targetQuantity;
-			}
-			
+		function displayCart () {
 			cart.innerHTML = '';
 			for (let item in somaeData.cart) {
 				const LI = document.createElement('li');
@@ -105,12 +67,102 @@
 								<button type="button" class="btn-delete">x</button>`;
 				cart.appendChild(LI);
 			}
+		}
 
-			console.table(somaeData.cart);
-		});
+		function displayHistory () {
+			[...document.querySelectorAll('.list.order')].forEach(ul => {
+				ul.innerHTML = '';
 
-		// 카트 품목 지우기
-		cart.addEventListener('click', (e) => {
+				somaeData.history.forEach(element => {
+					const LI = document.createElement('li');
+					let subLITemplate = '';
+					let statusTemplate;
+					let timeStamp;
+	
+					for (let item in element) {
+						if (item === 'status') {
+							statusTemplate = element[item];
+						} else if (item === 'time') {
+							timeStamp = element[item];
+						}	else {
+							subLITemplate += `<li>${[item]} <span>${element[item]}</span></li>`;
+						}
+						
+						if (ul.parentElement.className	 === 'shop') {
+							LI.innerHTML = `<span class="text-date">${timeStamp}</span>
+											<ul class="order-item">${subLITemplate}</ul>
+											<div class="btn-area"><button type="button" class="btn-confirm">수락</button> <button type="button" class="btn-reject">불가</button></div>`;
+							ul.appendChild(LI);
+						} else if (ul.parentElement.className === 'customer') {
+							LI.innerHTML = `<span class="text-date">${timeStamp}</span>
+											<ul class="order-item">${subLITemplate}</ul>
+											<div class="btn-area"><button type="button" class="btn-cancel">취소</button></div>
+											<div class="status">${statusTemplate}</div>`;
+							ul.prepend(LI);
+						}
+					}
+				});
+			});
+		}
+		
+		function changeSpinnerHandler () {
+			const target = this;
+			let targetItem, targetQuantity;
+			let orderableQuantity;
+
+			isNegativeValue(target);
+			
+			targetItem = target.previousElementSibling.previousElementSibling.querySelector('span').textContent;
+			targetQuantity = target.valueAsNumber;
+			
+			if (domae.contains(target)) {
+				domaeData.some(element => {
+					if (element.item === targetItem) {
+						element.stockQuantity = targetQuantity;
+						if (element.hasOwnProperty('orderableQuantity')) {
+							if (element.stockQuantity - element.orderedQuantity < 0) {
+								element.stockQuantity = element.orderedQuantity;
+								target.valueAsNumber = element.orderedQuantity;
+								return alert('이미 주문받은 수량이하로 재고를 조정할 수 없습니다.\n발주처리를 먼저 하십시오.');
+							}
+							element.orderableQuantity = element.stockQuantity - element.orderedQuantity;
+						}
+					}
+				});
+
+				console.table(domaeData);
+			} else if (somae.contains(target)) {
+				domaeData.some(element => {
+					if (element.item === targetItem) {
+						if (element.hasOwnProperty('orderableQuantity')) {
+							orderableQuantity = element.orderableQuantity;
+						} else {
+							orderableQuantity = element.stockQuantity;
+						}
+						
+						return true;
+					}
+				});
+				
+				if (targetQuantity > orderableQuantity) {
+					target.valueAsNumber = orderableQuantity;
+					targetQuantity = orderableQuantity;
+					alert(`재고가 부족합니다 (최대 주문가능 수량: ${orderableQuantity}개)`);
+				}
+	
+				if (targetQuantity <= 0) {
+					delete somaeData.cart[targetItem];
+				} else {
+					somaeData.cart[targetItem] = targetQuantity;
+				}
+				
+				displayCart();
+	
+				console.table(somaeData.cart);
+			}
+		}
+
+		function removeCartItemHandler (e) {
 			const target = e.target;
 			let targetItem;
 			
@@ -119,32 +171,26 @@
 			}
 
 			targetItem = target.previousElementSibling.previousElementSibling.textContent;
-			targetLI = target.parentElement;
-
 			delete somaeData.cart[targetItem];
-			cart.removeChild(targetLI);
+			
 			[...somaeList.children].some(element => {
 				if (element.querySelector('label span').textContent === targetItem) {
 					element.querySelector('.spinner').valueAsNumber = 0;
 					return true;
 				}
-			})
+			});
+
+			displayCart();
 
 			console.table(somaeData.cart);
-		});
+		}
 
-		// 발주 버튼클릭
-		submit.addEventListener('click', () => {
-			const domaeLI = document.createElement('li');
-			let somaeLI = document.createElement('li');
-			
-						
+		function submitButtonHandler () {
+			const timeStamp = new Date().format();
+
 			if (!cart.hasChildNodes()) {
 				return alert('상품이 없습니다.');
 			}
-
-			const domaeCartNode = cart.cloneNode(true);
-			const somaeCartNode = cart.cloneNode(true);
 
 			cart.innerHTML = '';
 			[...somaeList.children].filter(element => {
@@ -153,54 +199,31 @@
 				element.querySelector('.spinner').valueAsNumber = 0;
 			});
 
-			domaeCartNode.querySelectorAll('li').forEach(element => {
-				element.removeChild(element.lastElementChild);
-			});
-			domaeCartNode.className = 'order-item';
-			
-			domaeLI.innerHTML = `<span class="text-date">${new Date().format()}</span>`;
-			domaeLI.appendChild(domaeCartNode);
-			domaeLI.innerHTML += `<div class="btn-area"><button type="button" class="btn-confirm">수락</button> <button type="button" class="btn-reject">불가</button></div>`;			
-			domaeHistory.appendChild(domaeLI);
-			
-			somaeCartNode.querySelectorAll('li').forEach(element => {
-				element.removeChild(element.lastElementChild);
-			});
-			somaeCartNode.className = 'order-item';
-			somaeLI.dataset.index = orderIndex;
-			somaeLI.innerHTML = `<span class="text-date">${new Date().format()}</span>`;
-			somaeLI.appendChild(somaeCartNode);
-			somaeLI.innerHTML += `<div class="btn-area"><button type="button" class="btn-cancel">취소</button></div>`;
-			somaeLI.innerHTML += `<div class="status">발주 신청</div>`;
-			somaeHistory.prepend(somaeLI);
-
 			for (let item in somaeData.cart) {
 				domaeData.some(element => {
-					console.log('순회수');
 					if (element["item"] === item) {
 						if (element.hasOwnProperty('orderableQuantity')) {
-							element.orderableQuantity = element.orderableQuantity - somaeData.cart[item];
+							element.orderableQuantity -= somaeData.cart[item];
 						} else {
 							element.orderableQuantity = element.stockQuantity - somaeData.cart[item];
 						}
-
+						element.orderedQuantity = element.stockQuantity  - element.orderableQuantity;
 						return true;
 					}
 				});
 			}
 
 			somaeData.cart.status = '발주 신청';
-			somaeData.cart.orderIndex = orderIndex;
+			somaeData.cart.time = timeStamp;
 			somaeData.history.push(somaeData.cart);
 			somaeData.cart = {};
-			orderIndex++;
 
+			displayHistory();
 			console.table(domaeData);
 			console.table(somaeData.history);
-		});
+		}
 
-		// 발주 취소
-		somaeHistory.addEventListener('click', (e) => {
+		function cancelOrderingHandler (e) {
 			const target = e.target;
 			let orderIndex, matchedIndex;
 
@@ -208,23 +231,42 @@
 				return;
 			}
 
-			orderIndex = target.parentElement.parentElement.dataset.index;
+			orderIndex = Array.prototype.indexOf.call([...somaeHistory.children].reverse(), target.parentElement.parentElement);
 			
 			somaeData.history.some((element, index) => {
-				// console.log(element["orderIndex"], orderIndex);
-				if (element["orderIndex"] === Number(orderIndex)) {
-					console.log(element);
+				if (index === orderIndex) {
 					matchedIndex = index;
+					
 					return true;
 				}
 			});
-			console.log(matchedIndex);
+			for(let item in somaeData.history[matchedIndex]) {
+				if (!(item === 'status' || item === 'time')) {
+					domaeData.some(element => {
+						if (element["item"] === item) {
+							element.orderableQuantity += somaeData.history[matchedIndex][item];
+							element.orderedQuantity -= somaeData.history[matchedIndex][item];
+						}
+					});
+				}
+			}
 			somaeData.history.splice(matchedIndex, 1);
+			displayHistory();
 
+			console.table(domaeData);
 			console.table(somaeData.history);
-
-		});
+		}
 		
-		displayStock();
+		function addEvents () {
+			displayStock();
+			[...spinner].forEach(element => {
+				element.addEventListener('change', changeSpinnerHandler);
+			});
+			cart.addEventListener('click', removeCartItemHandler);
+			submit.addEventListener('click', submitButtonHandler);
+			somaeHistory.addEventListener('click', cancelOrderingHandler);
+		}
+
+		addEvents();
 	}
 })();
