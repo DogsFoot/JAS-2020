@@ -15,7 +15,7 @@
 	request.responseType = 'json';
 	request.send();
 	request.onload = function () {
-		const {domae, somae, domaeList, somaeList, cart, somaeHistory, spinner, submit} = DOM;
+		const {domae, somae, domaeList, somaeList, cart, domaeHistory, somaeHistory, spinner, submit} = DOM;
 		const domaeData = request.response;
 		const somaeData = {
 			cart: {},
@@ -78,28 +78,32 @@
 					let subLITemplate = '';
 					let statusTemplate;
 					let timeStamp;
+					let btnTemplate = `<button type="button" class="btn-cancel">취소</button>`;
 	
 					for (let item in element) {
 						if (item === 'status') {
+							if (element[item] === '발주 완료' || element[item] === '발주 불가') {
+								btnTemplate = `<button type="button" class="btn-cancel is-disabled">취소</button>`;
+							}
 							statusTemplate = element[item];
 						} else if (item === 'time') {
 							timeStamp = element[item];
 						}	else {
 							subLITemplate += `<li>${[item]} <span>${element[item]}</span></li>`;
 						}
-						
-						if (ul.parentElement.className	 === 'shop') {
-							LI.innerHTML = `<span class="text-date">${timeStamp}</span>
-											<ul class="order-item">${subLITemplate}</ul>
-											<div class="btn-area"><button type="button" class="btn-confirm">수락</button> <button type="button" class="btn-reject">불가</button></div>`;
-							ul.appendChild(LI);
-						} else if (ul.parentElement.className === 'customer') {
-							LI.innerHTML = `<span class="text-date">${timeStamp}</span>
-											<ul class="order-item">${subLITemplate}</ul>
-											<div class="btn-area"><button type="button" class="btn-cancel">취소</button></div>
-											<div class="status">${statusTemplate}</div>`;
-							ul.prepend(LI);
-						}
+					}
+
+					if (ul.parentElement.className === 'shop' && element.status === "발주 신청") {
+						LI.innerHTML = `<span class="text-date">${timeStamp}</span>
+										<ul class="order-item">${subLITemplate}</ul>
+										<div class="btn-area"><button type="button" class="btn-confirm">수락</button> <button type="button" class="btn-reject">불가</button></div>`;
+						ul.appendChild(LI);
+					} else if (ul.parentElement.className === 'customer') {
+						LI.innerHTML = `<span class="text-date">${timeStamp}</span>
+										<ul class="order-item">${subLITemplate}</ul>
+										<div class="btn-area">${btnTemplate}</div>
+										<div class="status">${statusTemplate}</div>`;
+						ul.prepend(LI);
 					}
 				});
 			});
@@ -107,13 +111,13 @@
 		
 		function changeSpinnerHandler () {
 			const target = this;
-			let targetItem, targetQuantity;
-			let orderableQuantity;
+			let targetItem, targetQuantity, orderableQuantity, targetParentIndex;
 
 			isNegativeValue(target);
 			
 			targetItem = target.previousElementSibling.previousElementSibling.querySelector('span').textContent;
 			targetQuantity = target.valueAsNumber;
+			targetParentIndex = Array.prototype.indexOf.call([...domaeList.children], target.parentElement);
 			
 			if (domae.contains(target)) {
 				domaeData.some(element => {
@@ -123,14 +127,20 @@
 							if (element.stockQuantity - element.orderedQuantity < 0) {
 								element.stockQuantity = element.orderedQuantity;
 								target.valueAsNumber = element.orderedQuantity;
-								return alert('이미 주문받은 수량이하로 재고를 조정할 수 없습니다.\n발주처리를 먼저 하십시오.');
+								alert('이미 주문받은 수량이하로 재고를 조정할 수 없습니다.\n발주처리를 먼저 하십시오.');
 							}
 							element.orderableQuantity = element.stockQuantity - element.orderedQuantity;
 						}
 					}
 				});
 
-				console.table(domaeData);
+				if (target.valueAsNumber === 0) {
+					somaeList.children[targetParentIndex].classList.add('is-disabled');
+				} else if (target.valueAsNumber !== 0 && somaeList.children[targetParentIndex].classList.contains('is-disabled')) {
+					somaeList.children[targetParentIndex].classList.remove('is-disabled');
+				}
+
+				// console.table(domaeData);
 			} else if (somae.contains(target)) {
 				domaeData.some(element => {
 					if (element.item === targetItem) {
@@ -158,7 +168,7 @@
 				
 				displayCart();
 	
-				console.table(somaeData.cart);
+				// console.table(somaeData.cart);
 			}
 		}
 
@@ -182,7 +192,7 @@
 
 			displayCart();
 
-			console.table(somaeData.cart);
+			// console.table(somaeData.cart);
 		}
 
 		function submitButtonHandler () {
@@ -219,8 +229,8 @@
 			somaeData.cart = {};
 
 			displayHistory();
-			console.table(domaeData);
-			console.table(somaeData.history);
+			// console.table(domaeData);
+			// console.table(somaeData.history);
 		}
 
 		function cancelOrderingHandler (e) {
@@ -253,8 +263,83 @@
 			somaeData.history.splice(matchedIndex, 1);
 			displayHistory();
 
-			console.table(domaeData);
-			console.table(somaeData.history);
+			// console.table(domaeData);
+			// console.table(somaeData.history);
+		}
+
+		function acceptOrderingButtonHandler (e) {
+			const target = e.target;
+			let orderIndex, onApplying;
+			
+			if (target.className !== 'btn-confirm') {
+				return;
+			}
+
+			orderIndex = Array.prototype.indexOf.call([...domaeHistory.children], target.parentElement.parentElement);
+
+			onApplying = somaeData.history.filter(element => {
+				return element.status === '발주 신청';
+			});
+
+			for (let item in onApplying[orderIndex]) {
+				if (item === 'status') {
+					onApplying[orderIndex][item] = '발주 완료';
+				} else if (item !== 'time') {
+					domaeData.some(element => {
+						if (element["item"] === item) {
+							element.orderedQuantity -= onApplying[orderIndex][item];
+							element.stockQuantity -= onApplying[orderIndex][item];
+
+							return true;
+						}
+					});
+					[...domaeList.children].some(element => {
+						if (element.querySelector('label span').textContent === item) {
+							element.querySelector('.spinner').valueAsNumber -= onApplying[orderIndex][item];
+
+							return true;
+						}
+					});
+				}
+			}
+
+			displayHistory();
+			// console.table(somaeData.history);
+			// console.table(domaeData);
+		}
+
+		function rejectOrderingButtonHandler (e) {
+			const target = e.target;
+			let orderIndex, onApplying;
+
+			if (target.className !== 'btn-reject') {
+				return;
+			}
+			
+			orderIndex = Array.prototype.indexOf.call([...domaeHistory.children], target.parentElement.parentElement);
+
+			onApplying = somaeData.history.filter(element => {
+				return element.status === '발주 신청';
+			});
+
+			for(let item in onApplying[orderIndex]) {
+				if (item === 'status') {
+					onApplying[orderIndex][item] = '발주 불가';
+				} else if (item !== 'time') {
+					domaeData.some(element => {
+						if (element["item"] === item) {
+							element.orderableQuantity += onApplying[orderIndex][item];
+							element.orderedQuantity -= onApplying[orderIndex][item];
+						}
+					});
+				}
+			}
+			
+			displayHistory();
+
+			// console.table(domaeData);
+			// console.table(somaeData.history);
+
 		}
 		
 		function addEvents () {
@@ -264,6 +349,8 @@
 			});
 			cart.addEventListener('click', removeCartItemHandler);
 			submit.addEventListener('click', submitButtonHandler);
+			domaeHistory.addEventListener('click', acceptOrderingButtonHandler);
+			domaeHistory.addEventListener('click', rejectOrderingButtonHandler);
 			somaeHistory.addEventListener('click', cancelOrderingHandler);
 		}
 
