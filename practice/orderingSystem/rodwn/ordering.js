@@ -15,8 +15,12 @@
 	request.responseType = 'json';
 	request.send();
 	request.onload = function () {
-		const {domae, somae, domaeList, somaeList, cart, domaeHistory, somaeHistory, spinner, submit} = DOM;
 		const domaeData = request.response;
+		ordering(domaeData);
+	}
+
+	function ordering (data) {
+		const {domae, somae, domaeList, somaeList, cart, domaeHistory, somaeHistory, spinner, submit} = DOM;
 		const somaeData = {
 			cart: {},
 			history: []
@@ -24,9 +28,15 @@
 
 		// 최초 재고를 화면에 출력
 		function displayStock () {
-			domaeList.querySelectorAll('li').forEach((element, index) => {
-				element.querySelector('label span').textContent = domaeData[index].item;
-				element.querySelector('.spinner').valueAsNumber = domaeData[index].stockQuantity;
+			domaeList.querySelectorAll('li').forEach((element) => {
+				data.some(el => {
+					if (el.id === element.dataset.item) {
+						element.querySelector('label span').textContent = el.item;
+						element.querySelector('.spinner').valueAsNumber = el.stockQuantity;
+
+						return true;
+					}
+				});
 			});
 		}
 
@@ -48,9 +58,9 @@
 			return `${this.getFullYear()}년 ${this.getMonth() + 1}월 ${this.getDate()}일 (${day[this.getDay()]}) ${AMPM} ${hour}시 ${this.getMinutes()}분 ${this.getSeconds()}초`;
 		};
 
-		function isNegativeValue (targetSpinner) {
-			if (targetSpinner.valueAsNumber < 0) {
-				targetSpinner.valueAsNumber = 0;
+		function isSpinnerNegativeValue (target) {
+			if (target.valueAsNumber < 0) {
+				target.valueAsNumber = 0;
 				alert('수량은 0개 이하일 수 없습니다.');
 
 				return true;
@@ -72,7 +82,6 @@
 		function displayHistory () {
 			[...document.querySelectorAll('.list.order')].forEach(ul => {
 				ul.innerHTML = '';
-
 				somaeData.history.forEach(element => {
 					const LI = document.createElement('li');
 					let subLITemplate = '';
@@ -109,18 +118,17 @@
 			});
 		}
 		
-		function changeSpinnerHandler () {
-			const target = this;
-			let targetItem, targetQuantity, orderableQuantity, targetParentIndex;
+		function changeSpinnerHandler (e) {
+			const target = e.target;
+			let targetItem, targetQuantity, orderableQuantity;
 
-			isNegativeValue(target);
+			isSpinnerNegativeValue(target);
 			
 			targetItem = target.previousElementSibling.previousElementSibling.querySelector('span').textContent;
 			targetQuantity = target.valueAsNumber;
-			targetParentIndex = Array.prototype.indexOf.call([...domaeList.children], target.parentElement);
 			
 			if (domae.contains(target)) {
-				domaeData.some(element => {
+				data.some(element => {
 					if (element.item === targetItem) {
 						element.stockQuantity = targetQuantity;
 						if (element.hasOwnProperty('orderableQuantity')) {
@@ -134,15 +142,11 @@
 					}
 				});
 
-				if (target.valueAsNumber === 0) {
-					somaeList.children[targetParentIndex].classList.add('is-disabled');
-				} else if (target.valueAsNumber !== 0 && somaeList.children[targetParentIndex].classList.contains('is-disabled')) {
-					somaeList.children[targetParentIndex].classList.remove('is-disabled');
-				}
+ 				disableSomaeItem(target);
 
-				// console.table(domaeData);
+				// console.table(data);
 			} else if (somae.contains(target)) {
-				domaeData.some(element => {
+				data.some(element => {
 					if (element.item === targetItem) {
 						if (element.hasOwnProperty('orderableQuantity')) {
 							orderableQuantity = element.orderableQuantity;
@@ -165,7 +169,7 @@
 				} else {
 					somaeData.cart[targetItem] = targetQuantity;
 				}
-				
+
 				displayCart();
 	
 				// console.table(somaeData.cart);
@@ -210,7 +214,7 @@
 			});
 
 			for (let item in somaeData.cart) {
-				domaeData.some(element => {
+				data.some(element => {
 					if (element["item"] === item) {
 						if (element.hasOwnProperty('orderableQuantity')) {
 							element.orderableQuantity -= somaeData.cart[item];
@@ -229,7 +233,7 @@
 			somaeData.cart = {};
 
 			displayHistory();
-			// console.table(domaeData);
+			// console.table(data);
 			// console.table(somaeData.history);
 		}
 
@@ -252,7 +256,7 @@
 			});
 			for(let item in somaeData.history[matchedIndex]) {
 				if (!(item === 'status' || item === 'time')) {
-					domaeData.some(element => {
+					data.some(element => {
 						if (element["item"] === item) {
 							element.orderableQuantity += somaeData.history[matchedIndex][item];
 							element.orderedQuantity -= somaeData.history[matchedIndex][item];
@@ -263,8 +267,24 @@
 			somaeData.history.splice(matchedIndex, 1);
 			displayHistory();
 
-			// console.table(domaeData);
+			// console.table(data);
 			// console.table(somaeData.history);
+		}
+
+		function disableSomaeItem (target) {
+			const itemID = target.parentElement.dataset.item;
+
+			[...somaeList.children].some(element => {
+				if (element.dataset.item === itemID && target.valueAsNumber === 0) {
+					element.classList.add('is-disabled')
+					element.querySelector('.spinner').setAttribute('disabled',true);
+					return true;
+				} else if (element.dataset.item === itemID && target.valueAsNumber !== 0) {
+					element.classList.remove('is-disabled');
+					element.querySelector('.spinner').removeAttribute('disabled');
+					return true;
+				}
+			});
 		}
 
 		function acceptOrderingButtonHandler (e) {
@@ -285,7 +305,7 @@
 				if (item === 'status') {
 					onApplying[orderIndex][item] = '발주 완료';
 				} else if (item !== 'time') {
-					domaeData.some(element => {
+					data.some(element => {
 						if (element["item"] === item) {
 							element.orderedQuantity -= onApplying[orderIndex][item];
 							element.stockQuantity -= onApplying[orderIndex][item];
@@ -305,7 +325,7 @@
 
 			displayHistory();
 			// console.table(somaeData.history);
-			// console.table(domaeData);
+			// console.table(data);
 		}
 
 		function rejectOrderingButtonHandler (e) {
@@ -326,7 +346,7 @@
 				if (item === 'status') {
 					onApplying[orderIndex][item] = '발주 불가';
 				} else if (item !== 'time') {
-					domaeData.some(element => {
+					data.some(element => {
 						if (element["item"] === item) {
 							element.orderableQuantity += onApplying[orderIndex][item];
 							element.orderedQuantity -= onApplying[orderIndex][item];
@@ -337,7 +357,7 @@
 			
 			displayHistory();
 
-			// console.table(domaeData);
+			// console.table(data);
 			// console.table(somaeData.history);
 
 		}

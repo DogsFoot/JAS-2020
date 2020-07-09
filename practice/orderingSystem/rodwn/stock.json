@@ -1,62 +1,77 @@
 [
 	{
 		"item": "우유",
+		"id": "milk",
 		"stockQuantity": 10
 	},
 	{
 		"item": "라면",
+		"id": "ramen",
 		"stockQuantity": 20
 	},
 	{
 		"item": "생수",
+		"id": "water",
 		"stockQuantity": 30
 	},
 	{
 		"item": "커피",
+		"id": "coffee",
 		"stockQuantity": 40
 	},
 	{
 		"item": "쌀",
+		"id": "rice",
 		"stockQuantity": 50
 	},
 	{
 		"item": "잡곡",
+		"id": "grain",
 		"stockQuantity": 60
 	},
 	{
 		"item": "과일",
+		"id": "fruit",
 		"stockQuantity": 70
 	},
 	{
 		"item": "계란",
+		"id": "egg",
 		"stockQuantity": 80
 	},
 	{
 		"item": "김치",
+		"id": "kimchi",
 		"stockQuantity": 90
 	},
 	{
 		"item": "두부|콩나물",
+		"id": "tofu&beanSprout",
 		"stockQuantity": 10
 	},
 	{
 		"item": "어묵|맛살",
+		"id": "fishCake&crabMeat",
 		"stockQuantity": 20
 	},
 	{
 		"item": "햄|소시지",
+		"id": "ham&sausage",
 		"stockQuantity": 30
 	},
 	{
 		"item": "닭고기",
+		"id": "chicken",
 		"stockQuantity": 40
 	},
 	{
 		"item": "돼지고기",
+		"id": "fork",
 		"stockQuantity": 50
 	},
 	{
 		"item": "소고기",
+		"id": "beef",
 		"stockQuantity": 60
 	}
 ]
