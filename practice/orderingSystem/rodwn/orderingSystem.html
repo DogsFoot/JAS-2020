@@ -1,0 +1,281 @@
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Ordering System</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+	<style>
+				.wrap {display:flex; width: 1440px; margin:50px auto;}
+				.wrap > div {flex: 1; padding: 30px;}
+				h1 {margin-bottom: 32px; text-align:  center; font-size: 40px;}
+				h3 {margin-bottom: 16px; font-weight: bold; font-size: 20px;}
+				.list.product {display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-content: space-around; margin-bottom :50px;}
+				.list.product .list-item {flex: 1; padding: 10px; border: 1px solid #eee; text-align: center;}
+				.list.product .list-item .thum {position: relative; display: block; width: 100px; height: 70px; }
+				.list.product .list-item .thum img {position: absolute; width: 100px; height: 100px; clip: rect(30px, 100px, 100px, 0px);bottom: 0;left: 0;}
+				.spinner { width: 70px; padding: 5px; margin-top: 10px; }
+				.is-disabled {pointer-events: none; opacity: 0.5;}
+
+				.list.cart {border: 1px solid #eee;padding: 10px;}
+				.list.cart .btn-delete {background-color: transparent;border: none;}
+
+				.list.order>li{border: 1px solid #eee;padding: 10px;}
+				.list.order .text-date {display: block; margin-bottom: 5px; font-size: 12px; color: #333;}
+				.list.order .status {display: block; margin-top: 5px; font-size: 15px; font-weight: bold;}
+
+				.order-item { padding-left: 10px; }
+				.order-item>li {margin-top: 5px;}
+				.btn-area {margin-top: 10px; text-align: right;}
+				button { cursor: pointer;}
+	</style>
+</head>
+<body>
+		<div class="wrap">
+				<div class="shop">
+						<h1>도매</h1>
+						<ul class="list product">
+								<li class="list-item" data-item="milk">
+										<label for="for-chklist-0">
+												<span>우유</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/01.jpg" alt="우유"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="ramen">
+										<label for="for-chklist-1">
+												<span>라면</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/02.jpg" alt="라면"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="water">
+										<label for="for-chklist-2">
+												<span>생수</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/03.jpg" alt="생수"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="coffee">
+										<label for="for-chklist-3">
+												<span>커피</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/04.jpg" alt="커피"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="rice">
+										<label for="for-chklist-4">
+												<span>쌀</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/05.jpg" alt="쌀"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="grain">
+										<label for="for-chklist-5">
+												<span>잡곡</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/06.jpg" alt="잡곡"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="fruit">
+										<label for="for-chklist-6">
+												<span>과일</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/speedicon_fruits1.jpg" alt="과일"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="egg">
+										<label for="for-chklist-7">
+												<span>계란</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/08.jpg" alt="계란"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="kimchi">
+										<label for="for-chklist-8">
+												<span>김치</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/09.jpg" alt="김치"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="tofu&beanSprout">
+										<label for="for-chklist-9">
+												<span>두부|콩나물</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/10.jpg" alt="두부|콩나물"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="fishCake&crabMeat">
+										<label for="for-chklist-10">
+												<span>어묵|맛살</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/11.jpg" alt="어묵|맛살"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="ham&sausage">
+										<label for="for-chklist-11">
+												<span>햄|소시지</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/12.jpg" alt="햄|소시지"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="chicken">
+										<label for="for-chklist-12">
+												<span>닭고기</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/13.jpg" alt="닭고기"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+								<li class="list-item" data-item="fork">
+										<label for="for-chklist-13">
+												<span>돼지고기</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/14.jpg" alt="돼지고기"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="beef">
+										<label for="for-chklist-14">
+												<span>소고기</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/15.jpg" alt="소고기"></span>
+										<input type="number" value="10" class="spinner">
+								</li>
+						</ul>
+						<h3>주문</h3>
+						<ul class="list order"></ul>
+				</div>
+				<div class="customer">
+						<h1>소매</h1>
+						<ul class="list product">
+								<li class="list-item" data-item="milk">
+										<label for="for-chklist-0">
+												<input type="checkbox" name="order-product" id="for-chklist-0" checked />
+												<span>우유</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/01.jpg" alt="우유"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="ramen">
+										<label for="for-chklist-1">
+												<input type="checkbox" name="order-product" id="for-chklist-1" />
+												<span>라면</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/02.jpg" alt="라면"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="water">
+										<label for="for-chklist-2">
+												<input type="checkbox" name="order-product" id="for-chklist-2" />
+												<span>생수</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/03.jpg" alt="생수"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="coffee">
+										<label for="for-chklist-3">
+												<input type="checkbox" name="order-product" id="for-chklist-3" />
+												<span>커피</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/04.jpg" alt="커피"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="rice">
+										<label for="for-chklist-4">
+												<input type="checkbox" name="order-product" id="for-chklist-4" />
+												<span>쌀</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/05.jpg" alt="쌀"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="grain">
+										<label for="for-chklist-5">
+												<input type="checkbox" name="order-product" id="for-chklist-5" />
+												<span>잡곡</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/06.jpg" alt="잡곡"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="fruit">
+										<label for="for-chklist-6">
+												<input type="checkbox" name="order-product" id="for-chklist-6" checked/>
+												<span>과일</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/speedicon_fruits1.jpg" alt="과일"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="egg">
+										<label for="for-chklist-7">
+												<input type="checkbox" name="order-product" id="for-chklist-7" />
+												<span>계란</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/08.jpg" alt="계란"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="kimchi">
+										<label for="for-chklist-8">
+												<input type="checkbox" name="order-product" id="for-chklist-8" />
+												<span>김치</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/09.jpg" alt="김치"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="tofu&beanSprout">
+										<label for="for-chklist-9">
+												<input type="checkbox" name="order-product" id="for-chklist-9" />
+												<span>두부|콩나물</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/10.jpg" alt="두부|콩나물"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="fishCake&crabMeat">
+										<label for="for-chklist-10">
+												<input type="checkbox" name="order-product" id="for-chklist-10" />
+												<span>어묵|맛살</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/11.jpg" alt="어묵|맛살"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="ham&sausage">
+										<label for="for-chklist-11">
+												<input type="checkbox" name="order-product" id="for-chklist-11" />
+												<span>햄|소시지</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/12.jpg" alt="햄|소시지"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="chicken">
+										<label for="for-chklist-12">
+												<input type="checkbox" name="order-product" id="for-chklist-12" />
+												<span>닭고기</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/13.jpg" alt="닭고기"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="fork">
+										<label for="for-chklist-13">
+												<input type="checkbox" name="order-product" id="for-chklist-13" />
+												<span>돼지고기</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/14.jpg" alt="돼지고기"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+								<li class="list-item" data-item="beef">
+										<label for="for-chklist-14">
+												<input type="checkbox" name="order-product" id="for-chklist-14" />
+												<span>소고기</span>
+										</label>
+										<span class="thum"><img src="//image.homeplus.co.kr/UserFiles/SPEEDSHOPPING/15.jpg" alt="소고기"></span>
+										<input type="number" value="0" class="spinner">
+								</li>
+						</ul>
+						<h3>발주신청</h3>
+						<ul class="list cart"></ul>
+						<div class="btn-area">
+								<button type="submit" class="btn-submit">주문하기</button>
+						</div>
+						<h3>지난 주문</h3>
+						<ul class="list order"></ul>
+				</div>
+		</div>
+		<script src="./ordering.js"></script>
+</body>
+</html>
